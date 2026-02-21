@@ -1,0 +1,14 @@
+{
+  "name": "tebuskarbon-cypress-tests",
+  "version": "1.0.0",
+  "description": "End-to-end testing for TebusKarbon website",
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test:e2e": "cypress run --browser chrome",
+    "test:e2e:headed": "cypress run --browser chrome --headed"
+  },
+  "devDependencies": {
+    "cypress": "^13.0.0"
+  }
+}
