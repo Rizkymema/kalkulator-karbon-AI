@@ -30,7 +30,6 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import Chatbot from "@/components/Chatbot"
-import TestChatbot from "@/components/TestChatbot"
 
 interface EmissionData {
   id: string
@@ -47,16 +46,14 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login")
-    }
-    
     if (session?.user?.role === "ADMIN") {
       router.push("/admin")
     }
 
     if (session?.user) {
       fetchEmissions()
+    } else if (status !== "loading") {
+      setIsLoading(false)
     }
   }, [session, status, router])
 
@@ -82,9 +79,6 @@ export default function DashboardPage() {
     )
   }
 
-  if (!session) {
-    return null
-  }
 
   // Calculate statistics
   const totalEmissions = emissions.reduce((sum, record) => sum + record.totalEmisi, 0)
@@ -137,21 +131,22 @@ export default function DashboardPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-8">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-[#030a08] pt-36 pb-12 relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 h-[400px] bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.06),transparent_50%)] pointer-events-none" />
+      <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">
+              <h1 className="text-3xl font-black font-display tracking-tight text-white mb-2 uppercase">
                 Dasbor Emisi Karbon
               </h1>
-              <p className="text-gray-600">
-                Selamat datang, {session.user?.name}! Pantau perjalanan lingkungan Anda.
+              <p className="text-slate-400 font-medium">
+                Selamat datang, {session?.user?.name || 'Pengguna'}! Pantau perjalanan lingkungan Anda.
               </p>
             </div>
             <Link href="/kalkulator">
-              <Button className="bg-green-600 hover:bg-green-700">
+              <Button className="bg-emerald-600 hover:bg-emerald-750 text-white font-bold rounded-xl">
                 <Zap className="h-4 w-4 mr-2" />
                 Hitung Emisi Baru
               </Button>
@@ -161,74 +156,80 @@ export default function DashboardPage() {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+          <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Total Perhitungan</p>
-                  <p className="text-2xl font-bold text-gray-900">{emissions.length}</p>
+                  <p className="text-sm font-medium text-slate-400">Total Perhitungan</p>
+                  <p className="text-2xl font-bold text-white">{emissions.length}</p>
                 </div>
-                <div className="p-3 bg-blue-100 rounded-full">
-                  <BarChart3 className="h-6 w-6 text-blue-600" />
+                <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-full">
+                  <BarChart3 className="h-6 w-6 text-blue-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+          <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Rata-rata Emisi</p>
-                  <p className="text-2xl font-bold text-gray-900">{avgEmissions.toFixed(2)} ton</p>
+                  <p className="text-sm font-medium text-slate-400">Rata-rata Emisi</p>
+                  <p className="text-2xl font-bold text-white">{avgEmissions.toFixed(2)} ton</p>
                   <div className="flex items-center mt-1">
                     {trend === 'down' ? (
-                      <TrendingDown className="h-4 w-4 text-green-500 mr-1" />
+                      <TrendingDown className="h-4 w-4 text-emerald-450 mr-1" />
                     ) : (
-                      <TrendingUp className="h-4 w-4 text-red-500 mr-1" />
+                      <TrendingUp className="h-4 w-4 text-rose-450 mr-1" />
                     )}
-                    <span className={`text-sm ${trend === 'down' ? 'text-green-500' : 'text-red-500'}`}>
+                    <span className={`text-sm ${trend === 'down' ? 'text-emerald-400' : 'text-rose-400'}`}>
                       {trendPercentage.toFixed(1)}%
                     </span>
                   </div>
                 </div>
-                <div className="p-3 bg-green-100 rounded-full">
-                  <Globe className="h-6 w-6 text-green-600" />
+                <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+                  <Globe className="h-6 w-6 text-emerald-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+          <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Pohon Dibutuhkan</p>
-                  <p className="text-2xl font-bold text-gray-900">{totalTrees}</p>
+                  <p className="text-sm font-medium text-slate-400">Pohon Dibutuhkan</p>
+                  <p className="text-2xl font-bold text-white">{totalTrees}</p>
                 </div>
-                <div className="p-3 bg-yellow-100 rounded-full">
-                  <Leaf className="h-6 w-6 text-yellow-600" />
+                <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-full">
+                  <Leaf className="h-6 w-6 text-amber-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+          <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Level Dampak</p>
+                  <p className="text-sm font-medium text-slate-400">Level Dampak</p>
                   <div className="flex items-center mt-1">
                     <Badge 
-                      variant={impactLevel === 'low' ? 'default' : impactLevel === 'medium' ? 'secondary' : 'destructive'}
-                      className="text-sm"
+                      variant={impactLevel === 'low' ? 'default' : 'secondary'}
+                      className={`text-sm font-bold border-0 ${
+                        impactLevel === 'low' 
+                          ? 'bg-emerald-500/20 text-emerald-300' 
+                          : impactLevel === 'medium' 
+                            ? 'bg-amber-500/20 text-amber-300' 
+                            : 'bg-rose-500/20 text-rose-300'
+                      }`}
                     >
                       {impactLevel === 'low' ? 'Rendah' : impactLevel === 'medium' ? 'Sedang' : 'Tinggi'}
                     </Badge>
                   </div>
                 </div>
-                <div className="p-3 bg-purple-100 rounded-full">
-                  <Target className="h-6 w-6 text-purple-600" />
+                <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-full">
+                  <Target className="h-6 w-6 text-purple-400" />
                 </div>
               </div>
             </CardContent>
@@ -239,20 +240,20 @@ export default function DashboardPage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             {/* Progress Section */}
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Target className="h-5 w-5 text-green-600" />
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Target className="h-5 w-5 text-emerald-450" />
                   Progress Menuju Target
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-slate-400 font-medium">
                   Target: Kurangi emisi menjadi 1.5 ton CO₂/tahun
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div>
-                    <div className="flex justify-between text-sm mb-2">
+                    <div className="flex justify-between text-sm text-slate-350 mb-2 font-medium">
                       <span>Emisi Saat Ini</span>
                       <span>{avgEmissions.toFixed(2)}/1.5 ton</span>
                     </div>
@@ -263,14 +264,14 @@ export default function DashboardPage() {
                   </div>
                   
                   {avgEmissions > 1.5 ? (
-                    <div className="bg-red-50 p-4 rounded-lg">
-                      <p className="text-sm text-red-700">
+                    <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-lg">
+                      <p className="text-sm text-red-400 font-medium">
                         Anda perlu mengurangi emisi sebesar {(avgEmissions - 1.5).toFixed(2)} ton untuk mencapai target.
                       </p>
                     </div>
                   ) : (
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <p className="text-sm text-green-700">
+                    <div className="bg-emerald-500/10 border border-emerald-500/20 p-4 rounded-lg">
+                      <p className="text-sm text-emerald-400 font-medium">
                         Selamat! Anda sudah mencapai target emisi rendah.
                       </p>
                     </div>
@@ -280,36 +281,36 @@ export default function DashboardPage() {
             </Card>
 
             {/* Recent Activity */}
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Calendar className="h-5 w-5 text-blue-600" />
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Calendar className="h-5 w-5 text-blue-400" />
                   Aktivitas Terbaru
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-slate-400 font-medium">
                   5 perhitungan emisi terakhir Anda
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {emissions.length === 0 ? (
                   <div className="text-center py-8">
-                    <Lightbulb className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-500 mb-4">Belum ada data emisi</p>
+                    <Lightbulb className="h-12 w-12 text-slate-500 mx-auto mb-4" />
+                    <p className="text-slate-400 mb-4 font-medium">Belum ada data emisi</p>
                     <Link href="/kalkulator">
-                      <Button>Mulai Perhitungan Pertama</Button>
+                      <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl">Mulai Perhitungan Pertama</Button>
                     </Link>
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {emissions.slice(0, 5).map((emission, index) => (
-                      <div key={emission.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    {emissions.slice(0, 5).map((emission) => (
+                      <div key={emission.id} className="flex items-center justify-between p-3.5 bg-slate-950/60 border border-white/5 rounded-lg">
                         <div className="flex items-center gap-3">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full"></div>
                           <div>
-                            <p className="font-medium text-gray-900">
+                            <p className="font-bold text-white">
                               {emission.totalEmisi.toFixed(2)} ton CO₂
                             </p>
-                            <p className="text-sm text-gray-500">
+                            <p className="text-xs text-slate-400 font-medium mt-0.5">
                               {new Date(emission.createdAt).toLocaleDateString('id-ID', {
                                 year: 'numeric',
                                 month: 'long',
@@ -319,17 +320,17 @@ export default function DashboardPage() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-sm font-medium text-gray-700">
+                          <p className="text-sm font-bold text-slate-300">
                             {emission.pohonDibutuhkan} pohon
                           </p>
-                          <p className="text-xs text-gray-500">dibutuhkan</p>
+                          <p className="text-[10px] text-slate-450 uppercase tracking-wider font-semibold">dibutuhkan</p>
                         </div>
                       </div>
                     ))}
                     
                     {emissions.length > 5 && (
                       <Link href="/riwayat">
-                        <Button variant="outline" className="w-full mt-4">
+                        <Button variant="outline" className="w-full mt-4 border-white/10 text-white hover:bg-white/10 rounded-xl font-bold">
                           Lihat Semua Riwayat
                           <ChevronRight className="h-4 w-4 ml-2" />
                         </Button>
@@ -344,10 +345,10 @@ export default function DashboardPage() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Achievements */}
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Award className="h-5 w-5 text-yellow-600" />
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Award className="h-5 w-5 text-amber-400" />
                   Pencapaian
                 </CardTitle>
               </CardHeader>
@@ -356,27 +357,31 @@ export default function DashboardPage() {
                   {achievements.map((achievement) => (
                     <div 
                       key={achievement.id}
-                      className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
-                        achievement.achieved ? 'bg-green-50 border border-green-200' : 'bg-gray-50'
+                      className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${
+                        achievement.achieved 
+                          ? 'bg-emerald-500/10 border-emerald-500/20' 
+                          : 'bg-slate-950/60 border-white/5'
                       }`}
                     >
                       <div className={`p-2 rounded-full ${
-                        achievement.achieved ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'
+                        achievement.achieved 
+                          ? 'bg-emerald-500/20 text-emerald-400' 
+                          : 'bg-slate-900 text-slate-500'
                       }`}>
                         {achievement.icon}
                       </div>
                       <div className="flex-1">
-                        <p className={`font-medium text-sm ${
-                          achievement.achieved ? 'text-green-700' : 'text-gray-500'
+                        <p className={`font-bold text-sm ${
+                          achievement.achieved ? 'text-emerald-400' : 'text-slate-400'
                         }`}>
                           {achievement.title}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-slate-450 font-medium">
                           {achievement.description}
                         </p>
                       </div>
                       {achievement.achieved && (
-                        <div className="text-green-600">
+                        <div className="text-emerald-400">
                           <ArrowUp className="h-4 w-4" />
                         </div>
                       )}
@@ -387,46 +392,46 @@ export default function DashboardPage() {
             </Card>
 
             {/* Quick Actions */}
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
               <CardHeader>
-                <CardTitle>Aksi Cepat</CardTitle>
+                <CardTitle className="text-white">Aksi Cepat</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   <Link href="/kalkulator">
-                    <Button className="w-full justify-start" variant="outline">
-                      <Calculator className="h-4 w-4 mr-2" />
+                    <Button className="w-full justify-start border-white/10 text-white hover:bg-white/10 rounded-xl font-bold" variant="outline">
+                      <Calculator className="h-4 w-4 mr-2 text-emerald-400" />
                       Hitung Emisi Baru
                     </Button>
                   </Link>
                   
                   <Link href="/hasil-lengkap">
-                    <Button className="w-full justify-start" variant="outline">
-                      <BarChart3 className="h-4 w-4 mr-2" />
+                    <Button className="w-full justify-start border-white/10 text-white hover:bg-white/10 rounded-xl font-bold" variant="outline">
+                      <BarChart3 className="h-4 w-4 mr-2 text-blue-400" />
                       Lihat Hasil Lengkap
                     </Button>
                   </Link>
                   
                   <Link href="/riwayat">
-                    <Button className="w-full justify-start" variant="outline">
-                      <Calendar className="h-4 w-4 mr-2" />
+                    <Button className="w-full justify-start border-white/10 text-white hover:bg-white/10 rounded-xl font-bold" variant="outline">
+                      <Calendar className="h-4 w-4 mr-2 text-purple-400" />
                       Riwayat Lengkap
                     </Button>
                   </Link>
                   
                   <Link href="/berita">
-                    <Button className="w-full justify-start" variant="outline">
-                      <Lightbulb className="h-4 w-4 mr-2" />
+                    <Button className="w-full justify-start border-white/10 text-white hover:bg-white/10 rounded-xl font-bold" variant="outline">
+                      <Lightbulb className="h-4 w-4 mr-2 text-amber-400" />
                       Tips Ramah Lingkungan
                     </Button>
                   </Link>
                   
                   <Button 
-                    className="w-full justify-start" 
+                    className="w-full justify-start border-white/10 text-white hover:bg-white/10 rounded-xl font-bold" 
                     variant="outline"
                     onClick={() => window.dispatchEvent(new CustomEvent('openChatbot'))}
                   >
-                    <MessageCircle className="h-4 w-4 mr-2" />
+                    <MessageCircle className="h-4 w-4 mr-2 text-teal-400" />
                     Tanya AI Assistant
                   </Button>
                 </div>
@@ -434,27 +439,27 @@ export default function DashboardPage() {
             </Card>
 
             {/* Environmental Impact */}
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-green-500 to-blue-600 text-white">
+            <Card className="border border-white/5 bg-gradient-to-br from-emerald-900/60 to-blue-950/30 text-white shadow-lg">
               <CardHeader>
                 <CardTitle className="text-white">Dampak Lingkungan</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div>
-                    <p className="text-green-100 text-sm">Total Emisi</p>
-                    <p className="text-2xl font-bold">{totalEmissions.toFixed(2)} ton</p>
+                    <p className="text-emerald-350 text-sm font-medium">Total Emisi</p>
+                    <p className="text-2xl font-extrabold">{totalEmissions.toFixed(2)} ton</p>
                   </div>
                   
                   <div>
-                    <p className="text-green-100 text-sm">Setara dengan</p>
-                    <p className="text-lg font-semibold">{totalTrees} pohon</p>
-                    <p className="text-green-100 text-xs">yang perlu ditanam</p>
+                    <p className="text-emerald-350 text-sm font-medium">Setara dengan</p>
+                    <p className="text-lg font-bold text-emerald-300">{totalTrees} pohon</p>
+                    <p className="text-emerald-350 text-xs font-semibold mt-0.5">yang perlu ditanam</p>
                   </div>
                   
                   {carbonSaved > 0 && (
-                    <div className="bg-white/20 p-3 rounded-lg">
-                      <p className="text-sm">
-                        Anda sudah menghemat <span className="font-bold">{carbonSaved.toFixed(2)} ton CO₂</span> dengan pola hidup ramah lingkungan!
+                    <div className="bg-white/5 border border-white/10 p-3 rounded-lg">
+                      <p className="text-sm font-medium text-slate-100">
+                        Anda sudah menghemat <span className="font-extrabold text-emerald-450">{carbonSaved.toFixed(2)} ton CO₂</span> dengan pola hidup ramah lingkungan!
                       </p>
                     </div>
                   )}
@@ -463,15 +468,15 @@ export default function DashboardPage() {
             </Card>
 
             {/* Tips of the Day */}
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-orange-400 to-pink-500 text-white">
+            <Card className="border border-white/5 bg-gradient-to-br from-orange-950/60 to-pink-950/30 text-white shadow-lg">
               <CardContent className="p-6">
                 <h3 className="font-bold mb-3 flex items-center gap-2">
                   💡 Tips Hari Ini
                 </h3>
-                <p className="text-sm text-orange-100 mb-4">
+                <p className="text-sm text-orange-200 mb-4 font-medium leading-relaxed">
                   Gunakan transportasi umum atau bersepeda untuk mengurangi emisi karbon dari kendaraan pribadi hingga 50%.
                 </p>
-                <Badge className="bg-white/20 text-white border-0">
+                <Badge className="bg-white/10 border border-white/10 text-white rounded-lg">
                   Transportasi Hijau
                 </Badge>
               </CardContent>
@@ -479,10 +484,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Test Chatbot API - Remove after testing */}
-        <div className="mt-8">
-          <TestChatbot />
-        </div>
       </div>
       
       {/* Dashboard-specific Chatbot with context */}

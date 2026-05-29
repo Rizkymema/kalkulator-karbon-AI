@@ -30,8 +30,14 @@ interface ChatbotProps {
 
 export default function Chatbot({ context, className = '' }: ChatbotProps) {
   const { data: session } = useSession()
+  const [mounted, setMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -81,6 +87,12 @@ Ada yang bisa saya bantu hari ini?`,
       timestamp: new Date()
     }
 
+    // Capture the current history before updating state
+    const currentHistory = messages.map(msg => ({
+      role: msg.role,
+      content: msg.content
+    }))
+
     setMessages(prev => [...prev, userMessage])
     setInputMessage('')
     setIsLoading(true)
@@ -93,7 +105,8 @@ Ada yang bisa saya bantu hari ini?`,
         },
         body: JSON.stringify({
           message: userMessage.content,
-          context: context
+          context: context,
+          history: [...currentHistory, { role: 'user', content: userMessage.content }]
         })
       })
 
@@ -131,7 +144,7 @@ Ada yang bisa saya bantu hari ini?`,
     }
   }
 
-  if (!session) {
+  if (!mounted) {
     return null
   }
 
@@ -140,32 +153,32 @@ Ada yang bisa saya bantu hari ini?`,
       {/* Chat Toggle Button */}
       {!isOpen && (
         <div className="flex items-center gap-3">
-          <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg border border-green-200">
-            <span className="text-sm font-medium text-green-700">Konsultasi dengan AI</span>
+          <div className="bg-slate-900/90 backdrop-blur-md px-4 py-2 rounded-2xl shadow-lg border border-white/5 text-emerald-400 font-bold text-xs uppercase tracking-wider">
+            Tanya AI Assistant
           </div>
           <Button
             onClick={() => setIsOpen(true)}
-            className="rounded-full w-14 h-14 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all duration-300 group"
+            className="rounded-full w-14 h-14 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-[0_0_15px_rgba(16,185,129,0.25)] hover:shadow-[0_0_25px_rgba(16,185,129,0.4)] transition-all duration-300 group cursor-pointer border border-white/10"
             aria-label="Open AI Chat"
           >
-            <MessageCircle className="h-6 w-6 group-hover:scale-110 transition-transform" />
+            <MessageCircle className="h-6 w-6 group-hover:scale-110 transition-transform text-white" />
           </Button>
         </div>
       )}
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className={`w-80 ${isMinimized ? 'h-16' : 'h-96'} shadow-2xl border-0 bg-white/95 backdrop-blur-md transition-all duration-300`}>
+        <Card className={`w-[380px] max-w-[calc(100vw-2rem)] ${isMinimized ? 'h-[72px]' : 'h-[520px]'} shadow-[0_10px_50px_rgba(0,0,0,0.5)] border border-white/10 bg-slate-950/90 backdrop-blur-2xl transition-all duration-300 rounded-2xl overflow-hidden`}>
           {/* Header */}
-          <CardHeader className="p-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-t-lg">
+          <CardHeader className="p-4 bg-gradient-to-r from-emerald-600/90 to-teal-600/90 text-white border-b border-white/5">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <div className="p-1.5 bg-white/20 rounded-full">
-                  <Bot className="h-4 w-4" />
+                <div className="p-1.5 bg-white/10 rounded-full border border-white/10">
+                  <Bot className="h-4 w-4 text-emerald-400" />
                 </div>
                 <div>
-                  <CardTitle className="text-sm font-semibold">AI Assistant</CardTitle>
-                  <p className="text-xs text-green-100">Karwanua Helper</p>
+                  <CardTitle className="text-sm font-bold text-white tracking-wide">AI Assistant</CardTitle>
+                  <p className="text-[10px] text-emerald-300 font-semibold uppercase tracking-wider">Karwanua Helper</p>
                 </div>
               </div>
               <div className="flex items-center space-x-1">
@@ -173,7 +186,7 @@ Ada yang bisa saya bantu hari ini?`,
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsMinimized(!isMinimized)}
-                  className="h-8 w-8 p-0 hover:bg-white/20 text-white"
+                  className="h-8 w-8 p-0 hover:bg-white/10 text-white rounded-lg transition-colors"
                 >
                   {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
                 </Button>
@@ -181,7 +194,7 @@ Ada yang bisa saya bantu hari ini?`,
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsOpen(false)}
-                  className="h-8 w-8 p-0 hover:bg-white/20 text-white"
+                  className="h-8 w-8 p-0 hover:bg-white/10 text-white rounded-lg transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -191,32 +204,32 @@ Ada yang bisa saya bantu hari ini?`,
 
           {/* Chat Content */}
           {!isMinimized && (
-            <CardContent className="p-0 flex flex-col h-80">
+            <CardContent className="p-0 flex flex-col h-[448px] bg-slate-950/40">
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {messages.map((message) => (
                   <div
                     key={message.id}
-                    className={`flex items-start space-x-2 ${
+                    className={`flex items-start space-x-2.5 ${
                       message.role === 'user' ? 'justify-end' : 'justify-start'
                     }`}
                   >
                     {message.role === 'assistant' && (
-                      <div className="p-1.5 bg-green-100 rounded-full flex-shrink-0">
-                        <Leaf className="h-3 w-3 text-green-600" />
+                      <div className="p-1.5 bg-teal-500/10 border border-teal-500/20 rounded-full flex-shrink-0 mt-0.5">
+                        <Leaf className="h-3.5 w-3.5 text-teal-400" />
                       </div>
                     )}
                     
                     <div
-                      className={`max-w-[70%] p-3 rounded-lg text-sm ${
+                      className={`max-w-[75%] p-3.5 rounded-2xl text-sm leading-relaxed ${
                         message.role === 'user'
-                          ? 'bg-green-500 text-white rounded-br-none'
-                          : 'bg-gray-100 text-gray-800 rounded-bl-none'
+                          ? 'bg-gradient-to-br from-emerald-600 to-teal-600 text-white rounded-br-none shadow-[0_4px_15px_rgba(16,185,129,0.15)] font-semibold'
+                          : 'bg-white/5 border border-white/5 text-slate-100 rounded-bl-none font-medium'
                       }`}
                     >
                       <p className="whitespace-pre-wrap">{message.content}</p>
-                      <p className={`text-xs mt-1 ${
-                        message.role === 'user' ? 'text-green-100' : 'text-gray-500'
+                      <p className={`text-[10px] mt-1.5 font-bold ${
+                        message.role === 'user' ? 'text-emerald-200' : 'text-slate-505'
                       }`}>
                         {message.timestamp.toLocaleTimeString('id-ID', { 
                           hour: '2-digit', 
@@ -226,22 +239,22 @@ Ada yang bisa saya bantu hari ini?`,
                     </div>
 
                     {message.role === 'user' && (
-                      <div className="p-1.5 bg-blue-100 rounded-full flex-shrink-0">
-                        <User className="h-3 w-3 text-blue-600" />
+                      <div className="p-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex-shrink-0 mt-0.5">
+                        <User className="h-3.5 w-3.5 text-emerald-400" />
                       </div>
                     )}
                   </div>
                 ))}
                 
                 {isLoading && (
-                  <div className="flex items-center space-x-2">
-                    <div className="p-1.5 bg-green-100 rounded-full">
-                      <Leaf className="h-3 w-3 text-green-600" />
+                  <div className="flex items-start space-x-2.5">
+                    <div className="p-1.5 bg-teal-500/10 border border-teal-500/20 rounded-full">
+                      <Leaf className="h-3.5 w-3.5 text-teal-400" />
                     </div>
-                    <div className="bg-gray-100 p-3 rounded-lg rounded-bl-none">
+                    <div className="bg-white/5 border border-white/5 p-3.5 rounded-2xl rounded-bl-none shadow-sm">
                       <div className="flex items-center space-x-2">
-                        <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
-                        <span className="text-sm text-gray-500">AI sedang mengetik...</span>
+                        <Loader2 className="h-3.5 w-3.5 animate-spin text-teal-400" />
+                        <span className="text-sm text-slate-400 font-semibold">AI sedang mengetik...</span>
                       </div>
                     </div>
                   </div>
@@ -251,7 +264,7 @@ Ada yang bisa saya bantu hari ini?`,
               </div>
 
               {/* Input */}
-              <div className="p-4 border-t border-gray-200">
+              <div className="p-4 border-t border-white/5 bg-slate-950/60">
                 <div className="flex space-x-2">
                   <input
                     ref={inputRef}
@@ -260,13 +273,13 @@ Ada yang bisa saya bantu hari ini?`,
                     onChange={(e) => setInputMessage(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="Tanya tentang emisi karbon..."
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                    className="flex-1 px-4 py-2.5 bg-slate-900/60 border border-white/10 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 text-white placeholder-slate-500 text-sm font-semibold transition-colors"
                     disabled={isLoading}
                   />
                   <Button
                     onClick={sendMessage}
                     disabled={!inputMessage.trim() || isLoading}
-                    className="bg-green-500 hover:bg-green-600 text-white p-2"
+                    className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white p-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center h-10 w-10 border border-emerald-500/10"
                   >
                     <Send className="h-4 w-4" />
                   </Button>

@@ -136,36 +136,36 @@ export function CommunityFeatures() {
 
   const getTypeColor = (type: CommunityChallenge['type']) => {
     switch (type) {
-      case 'local': return 'bg-blue-100 text-blue-800'
-      case 'national': return 'bg-green-100 text-green-800'
-      case 'global': return 'bg-purple-100 text-purple-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case 'local': return 'bg-blue-950/40 border border-blue-500/20 text-blue-300'
+      case 'national': return 'bg-green-950/40 border border-green-500/20 text-green-300'
+      case 'global': return 'bg-purple-950/40 border border-purple-500/20 text-purple-300'
+      default: return 'bg-slate-950/40 border border-white/5 text-slate-300'
     }
   }
 
   const getStatusColor = (status: CommunityChallenge['status']) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800'
-      case 'completed': return 'bg-gray-100 text-gray-800'
-      case 'upcoming': return 'bg-orange-100 text-orange-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case 'active': return 'bg-green-950/40 border border-green-500/20 text-green-300'
+      case 'completed': return 'bg-slate-950/40 border border-white/5 text-slate-400'
+      case 'upcoming': return 'bg-orange-950/40 border border-orange-500/20 text-orange-300'
+      default: return 'bg-slate-950/40 border border-white/5 text-slate-300'
     }
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-      <div className="bg-gradient-to-r from-green-600 to-blue-600 px-6 py-4">
+    <div className="bg-slate-900/40 border border-white/5 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden">
+      <div className="bg-gradient-to-r from-green-950/60 to-blue-950/60 px-6 py-4 border-b border-white/5">
         <div className="flex items-center space-x-3">
-          <Users className="w-6 h-6 text-white" />
+          <Users className="w-6 h-6 text-emerald-450" />
           <div>
             <h3 className="text-xl font-bold text-white">Komunitas Iklim</h3>
-            <p className="text-green-100">Bersama-sama untuk bumi yang lebih hijau</p>
+            <p className="text-slate-400 text-sm">Bersama-sama untuk bumi yang lebih hijau</p>
           </div>
         </div>
       </div>
 
       {/* Tab Navigation */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-white/10">
         <nav className="flex">
           {[
             { key: 'challenges', label: 'Tantangan', icon: Target },
@@ -175,13 +175,13 @@ export function CommunityFeatures() {
             <button
               key={key}
               onClick={() => setActiveTab(key as any)}
-              className={`flex items-center space-x-2 px-6 py-4 font-medium border-b-2 transition-colors ${
+              className={`flex items-center space-x-2 px-6 py-4 font-bold border-b-2 transition-all cursor-pointer ${
                 activeTab === key
-                  ? 'border-green-500 text-green-600 bg-green-50'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                  ? 'border-emerald-500 text-emerald-450 bg-emerald-950/20'
+                  : 'border-transparent text-slate-405 hover:text-white hover:bg-white/5'
               }`}
             >
-              <Icon className="w-4 h-4" />
+              <Icon className="w-4 h-4 text-emerald-400" />
               <span>{label}</span>
             </button>
           ))}
@@ -193,8 +193,8 @@ export function CommunityFeatures() {
         {activeTab === 'challenges' && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h4 className="text-lg font-semibold text-gray-900">Tantangan Aktif</h4>
-              <span className="text-sm text-gray-500">{challenges.length} tantangan tersedia</span>
+              <h4 className="text-lg font-bold text-white">Tantangan Aktif</h4>
+              <span className="text-sm text-slate-500">{challenges.length} tantangan tersedia</span>
             </div>
             
             <div className="grid gap-6">
@@ -203,71 +203,71 @@ export function CommunityFeatures() {
                   key={challenge.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow"
+                  className="border border-white/5 bg-slate-950/20 rounded-xl p-6 hover:border-white/10 transition-all"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
                       <span className="text-2xl">{getCategoryIcon(challenge.category)}</span>
                       <div>
-                        <h5 className="font-bold text-gray-900">{challenge.title}</h5>
-                        <p className="text-sm text-gray-600">{challenge.description}</p>
+                        <h5 className="font-bold text-white">{challenge.title}</h5>
+                        <p className="text-sm text-slate-450 leading-relaxed mt-0.5">{challenge.description}</p>
                       </div>
                     </div>
                     <div className="flex space-x-2">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(challenge.type)}`}>
+                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${getTypeColor(challenge.type)}`}>
                         {challenge.type}
                       </span>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(challenge.status)}`}>
+                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(challenge.status)}`}>
                         {challenge.status}
                       </span>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                    <div className="text-center p-3 bg-blue-50 rounded-lg">
-                      <div className="font-bold text-blue-600">{challenge.current}</div>
-                      <div className="text-sm text-blue-600">Progress</div>
+                    <div className="text-center p-3 bg-blue-955/20 border border-blue-500/10 rounded-xl">
+                      <div className="font-black text-blue-400 text-lg">{challenge.current}</div>
+                      <div className="text-xs text-slate-400 font-medium">Progress</div>
                     </div>
-                    <div className="text-center p-3 bg-green-50 rounded-lg">
-                      <div className="font-bold text-green-600">{challenge.target}</div>
-                      <div className="text-sm text-green-600">Target</div>
+                    <div className="text-center p-3 bg-green-955/20 border border-green-500/10 rounded-xl">
+                      <div className="font-black text-green-400 text-lg">{challenge.target}</div>
+                      <div className="text-xs text-slate-400 font-medium">Target</div>
                     </div>
-                    <div className="text-center p-3 bg-purple-50 rounded-lg">
-                      <div className="font-bold text-purple-600">{challenge.participants}</div>
-                      <div className="text-sm text-purple-600">Peserta</div>
+                    <div className="text-center p-3 bg-purple-955/20 border border-purple-500/10 rounded-xl">
+                      <div className="font-black text-purple-400 text-lg">{challenge.participants}</div>
+                      <div className="text-xs text-slate-400 font-medium">Peserta</div>
                     </div>
-                    <div className="text-center p-3 bg-orange-50 rounded-lg">
-                      <div className="font-bold text-orange-600">
+                    <div className="text-center p-3 bg-orange-955/20 border border-orange-500/10 rounded-xl">
+                      <div className="font-black text-orange-400 text-lg">
                         {Math.round((challenge.current / challenge.target) * 100)}%
                       </div>
-                      <div className="text-sm text-orange-600">Selesai</div>
+                      <div className="text-xs text-slate-400 font-medium">Selesai</div>
                     </div>
                   </div>
 
-                  <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
+                  <div className="w-full bg-slate-800 rounded-full h-3 mb-4">
                     <div 
                       className="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full transition-all duration-500"
                       style={{ width: `${Math.min((challenge.current / challenge.target) * 100, 100)}%` }}
                     ></div>
                   </div>
 
-                  <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm text-slate-400 mb-4">
                     <div className="flex items-center space-x-4">
                       <div className="flex items-center space-x-1">
-                        <MapPin className="w-4 h-4" />
+                        <MapPin className="w-4 h-4 text-emerald-400" />
                         <span>{challenge.location}</span>
                       </div>
                       <div className="flex items-center space-x-1">
-                        <Calendar className="w-4 h-4" />
+                        <Calendar className="w-4 h-4 text-emerald-400" />
                         <span>{new Date(challenge.endDate).toLocaleDateString('id-ID')}</span>
                       </div>
                     </div>
-                    <div className="font-medium text-green-600">
+                    <div className="font-semibold text-emerald-400">
                       Reward: {challenge.reward}
                     </div>
                   </div>
 
-                  <button className="w-full py-2 bg-gradient-to-r from-green-600 to-blue-600 text-white font-medium rounded-lg hover:from-green-700 hover:to-blue-700 transition-colors">
+                  <button className="w-full py-2.5 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition-colors cursor-pointer">
                     {challenge.status === 'upcoming' ? 'Daftar Sekarang' : 'Ikut Tantangan'}
                   </button>
                 </motion.div>
@@ -280,8 +280,8 @@ export function CommunityFeatures() {
         {activeTab === 'posts' && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h4 className="text-lg font-semibold text-gray-900">Cerita dari Komunitas</h4>
-              <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <h4 className="text-lg font-bold text-white">Cerita dari Komunitas</h4>
+              <button className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-bold cursor-pointer">
                 Bagikan Cerita
               </button>
             </div>
@@ -292,54 +292,54 @@ export function CommunityFeatures() {
                   key={post.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="border border-gray-200 rounded-xl p-6"
+                  className="border border-white/5 bg-slate-950/20 rounded-xl p-6"
                 >
                   <div className="flex items-start space-x-4">
                     <img
                       src={post.avatar}
                       alt={post.user}
-                      className="w-12 h-12 rounded-full bg-gray-300 object-cover"
+                      className="w-12 h-12 rounded-full bg-slate-805 object-cover border border-white/10"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
-                        target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(post.user)}&background=22c55e&color=fff`;
+                        target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(post.user)}&background=10b981&color=fff`;
                       }}
                     />
                     <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <h5 className="font-semibold text-gray-900">{post.user}</h5>
-                        <span className="text-sm text-gray-500">{post.timestamp}</span>
-                        <div className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <h5 className="font-bold text-white">{post.user}</h5>
+                        <span className="text-xs text-slate-500 font-medium">{post.timestamp}</span>
+                        <div className="px-2 py-0.5 bg-green-950/40 border border-green-500/20 text-green-400 rounded-full text-xs font-semibold">
                           {post.achievement}
                         </div>
                       </div>
                       
-                      <p className="text-gray-700 mb-4">{post.content}</p>
+                      <p className="text-slate-300 leading-relaxed mb-4 text-sm">{post.content}</p>
                       
                       {post.image && post.image.length > 0 && (
-                        <div className="w-full h-48 rounded-lg mb-4 bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center">
+                        <div className="w-full h-48 rounded-xl mb-4 bg-gradient-to-br from-green-950/40 to-blue-955/40 flex items-center justify-center border border-white/5">
                           <span className="text-6xl">🌱</span>
                         </div>
                       )}
                       
-                      <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg mb-4">
+                      <div className="flex items-center justify-between p-3 bg-green-950/20 border border-green-500/10 rounded-xl mb-4">
                         <div className="flex items-center space-x-2">
-                          <TrendingUp className="w-5 h-5 text-green-600" />
-                          <span className="font-medium text-green-800">
+                          <TrendingUp className="w-5 h-5 text-green-400" />
+                          <span className="font-semibold text-green-300 text-sm">
                             Berhasil menghemat {post.carbonSaved} kg CO₂
                           </span>
                         </div>
                       </div>
                       
-                      <div className="flex items-center space-x-6 text-sm text-gray-500">
-                        <button className="flex items-center space-x-1 hover:text-red-500 transition-colors">
+                      <div className="flex items-center space-x-6 text-sm text-slate-500 font-semibold">
+                        <button className="flex items-center space-x-1 hover:text-red-400 transition-colors cursor-pointer">
                           <Heart className="w-4 h-4" />
                           <span>{post.likes}</span>
                         </button>
-                        <button className="flex items-center space-x-1 hover:text-blue-500 transition-colors">
+                        <button className="flex items-center space-x-1 hover:text-blue-400 transition-colors cursor-pointer">
                           <MessageCircle className="w-4 h-4" />
                           <span>{post.comments}</span>
                         </button>
-                        <button className="flex items-center space-x-1 hover:text-green-500 transition-colors">
+                        <button className="flex items-center space-x-1 hover:text-emerald-400 transition-colors cursor-pointer">
                           <Share2 className="w-4 h-4" />
                           <span>Bagikan</span>
                         </button>
@@ -356,46 +356,46 @@ export function CommunityFeatures() {
         {activeTab === 'create' && (
           <div className="space-y-6">
             <div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-2">Buat Kampanye Baru</h4>
-              <p className="text-gray-600">Ajak komunitas untuk bersama-sama beraksi demi lingkungan</p>
+              <h4 className="text-lg font-bold text-white mb-1">Buat Kampanye Baru</h4>
+              <p className="text-slate-400 text-sm">Ajak komunitas untuk bersama-sama beraksi demi lingkungan</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-6 border-2 border-dashed border-gray-300 rounded-xl text-center hover:border-green-500 hover:bg-green-50 transition-colors cursor-pointer">
-                <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="p-6 border-2 border-dashed border-white/10 bg-slate-950/20 rounded-xl text-center hover:border-emerald-500 hover:bg-emerald-950/10 transition-colors cursor-pointer group">
+                <div className="w-16 h-16 bg-green-950/40 border border-green-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-105 transition-transform">
                   <span className="text-2xl">🌳</span>
                 </div>
-                <h5 className="font-semibold text-gray-900 mb-2">Kampanye Penanaman</h5>
-                <p className="text-sm text-gray-600">Buat kampanye untuk menanam pohon di area tertentu</p>
+                <h5 className="font-bold text-white mb-1">Kampanye Penanaman</h5>
+                <p className="text-xs text-slate-450 leading-relaxed">Buat kampanye untuk menanam pohon di area tertentu</p>
               </div>
 
-              <div className="p-6 border-2 border-dashed border-gray-300 rounded-xl text-center hover:border-blue-500 hover:bg-blue-50 transition-colors cursor-pointer">
-                <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="p-6 border-2 border-dashed border-white/10 bg-slate-955/20 rounded-xl text-center hover:border-blue-500 hover:bg-blue-955/10 transition-colors cursor-pointer group">
+                <div className="w-16 h-16 bg-blue-950/40 border border-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-105 transition-transform">
                   <span className="text-2xl">📉</span>
                 </div>
-                <h5 className="font-semibold text-gray-900 mb-2">Challenge Pengurangan</h5>
-                <p className="text-sm text-gray-600">Tantang komunitas untuk mengurangi emisi karbon</p>
+                <h5 className="font-bold text-white mb-1">Challenge Pengurangan</h5>
+                <p className="text-xs text-slate-450 leading-relaxed">Tantang komunitas untuk mengurangi emisi karbon</p>
               </div>
 
-              <div className="p-6 border-2 border-dashed border-gray-300 rounded-xl text-center hover:border-purple-500 hover:bg-purple-50 transition-colors cursor-pointer">
-                <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="p-6 border-2 border-dashed border-white/10 bg-slate-950/20 rounded-xl text-center hover:border-purple-500 hover:bg-purple-955/10 transition-colors cursor-pointer group">
+                <div className="w-16 h-16 bg-purple-955/40 border border-purple-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-105 transition-transform">
                   <span className="text-2xl">📚</span>
                 </div>
-                <h5 className="font-semibold text-gray-900 mb-2">Edukasi Lingkungan</h5>
-                <p className="text-sm text-gray-600">Kampanye edukasi tentang lingkungan dan iklim</p>
+                <h5 className="font-bold text-white mb-1">Edukasi Lingkungan</h5>
+                <p className="text-xs text-slate-450 leading-relaxed">Kampanye edukasi tentang lingkungan dan iklim</p>
               </div>
 
-              <div className="p-6 border-2 border-dashed border-gray-300 rounded-xl text-center hover:border-orange-500 hover:bg-orange-50 transition-colors cursor-pointer">
-                <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="p-6 border-2 border-dashed border-white/10 bg-slate-955/20 rounded-xl text-center hover:border-orange-500 hover:bg-orange-955/10 transition-colors cursor-pointer group">
+                <div className="w-16 h-16 bg-orange-955/40 border border-orange-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-105 transition-transform">
                   <span className="text-2xl">🧹</span>
                 </div>
-                <h5 className="font-semibold text-gray-900 mb-2">Aksi Bersih-bersih</h5>
-                <p className="text-sm text-gray-600">Organisir aksi membersihkan lingkungan</p>
+                <h5 className="font-bold text-white mb-1">Aksi Bersih-bersih</h5>
+                <p className="text-xs text-slate-455 leading-relaxed">Organisir aksi membersihkan lingkungan</p>
               </div>
             </div>
 
             <div className="text-center">
-              <button className="px-8 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-blue-700 transition-colors">
+              <button className="px-8 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-colors cursor-pointer shadow-lg shadow-emerald-900/20">
                 Mulai Buat Kampanye
               </button>
             </div>

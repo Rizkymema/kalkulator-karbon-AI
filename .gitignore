@@ -40,4 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/lib/generated/prisma
+/data/local-db.json
+/performance-report.json
+/.playwright-mcp/

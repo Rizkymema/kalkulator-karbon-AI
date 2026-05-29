@@ -45,11 +45,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  icons: {
-    icon: "/icon/favicon.ico",
-    shortcut: "/icon/favicon-16x16.png",
-    apple: "/icon/apple-touch-icon.png",
-  },
   manifest: "/manifest.json",
 };
 
@@ -59,8 +54,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id">
-      <body className="min-h-screen bg-white flex flex-col antialiased">
+    <html lang="id" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+      </head>
+      <body className="min-h-screen bg-[#030a08] text-slate-200 flex flex-col antialiased" suppressHydrationWarning>
         <AuthProvider>
           <ClientLayout>
             {children}

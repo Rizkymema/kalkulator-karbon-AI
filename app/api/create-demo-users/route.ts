@@ -37,7 +37,26 @@ async function createDemoUsers() {
     return { success: true, message: 'Demo users created successfully' };
   } catch (error) {
     console.error('❌ Error creating demo users:', error);
-    return { success: false, error: error.message };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+export async function POST() {
+  const result = await createDemoUsers();
+
+  if (result.success) {
+    return NextResponse.json({
+      message: 'Demo users created successfully',
+      credentials: {
+        admin: { email: 'admin@tebuskarbon.com', password: 'admin123' },
+        user: { email: 'user1@example.com', password: 'user123' }
+      }
+    });
+  } else {
+    return NextResponse.json({ error: result.error }, { status: 500 });
   }
 }
 

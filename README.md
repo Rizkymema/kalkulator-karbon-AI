@@ -173,12 +173,12 @@ karwanua/
 
 ## 💾 Penyimpanan Data
 
-- Menggunakan localStorage untuk persist data
-- Data yang disimpan:
-  - Riwayat kalkulasi
-  - Total karbon yang ditebus
-  - Preferensi pengguna
-- Fallback ke in-memory storage jika localStorage tidak tersedia
+- Data server-side disimpan di `data/local-db.json`
+- Data client-side tetap memakai localStorage untuk state UI yang persisten
+- Data yang disimpan mencakup:
+  - User demo dan akun hasil registrasi
+  - Riwayat kalkulasi emisi
+  - Preferensi pengguna di sisi client
 
 ## 🎨 Design System
 

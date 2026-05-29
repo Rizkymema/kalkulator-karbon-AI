@@ -14,7 +14,6 @@ Setelah menjalankan seeder, gunakan kredensial berikut untuk login sebagai admin
 
 **User Demo (untuk testing):**
 - Email: `user1@example.com` / Password: `user123`
-- Email: `user2@example.com` / Password: `user123`
 
 ## 📋 Cara Menjalankan Seeder
 
@@ -23,9 +22,9 @@ Setelah menjalankan seeder, gunakan kredensial berikut untuk login sebagai admin
    npm install
    ```
 
-2. **Push database schema:**
+2. **Reset data lokal (opsional jika ingin mulai bersih):**
    ```bash
-   npx prisma db push
+   npm run db:reset
    ```
 
 3. **Jalankan seeder:**
@@ -33,28 +32,22 @@ Setelah menjalankan seeder, gunakan kredensial berikut untuk login sebagai admin
    npm run db:seed
    ```
 
-4. **Reset database (jika diperlukan):**
-   ```bash
-   npm run db:reset
-   ```
+4. **Data tersimpan di file lokal:** `data/local-db.json`
 
 ## 🔑 Menambah Admin Baru
 
 ### Metode 1: Melalui Seeder (Recommended)
 
-Edit file `prisma/seed.ts` dan tambahkan admin baru:
+Edit file `scripts/create-demo-users.js` atau tambahkan user admin langsung ke `data/local-db.json`:
 
 ```typescript
-const newAdmin = await prisma.user.upsert({
-  where: { email: 'admin2@tebuskarbon.com' },
-  update: {},
-  create: {
-    name: 'Admin Kedua',
-    email: 'admin2@tebuskarbon.com',
-    hashedPassword: await bcrypt.hash('password123', 10),
-    role: 'ADMIN',
-  },
-})
+const newAdmin = {
+   name: 'Admin Kedua',
+   email: 'admin2@tebuskarbon.com',
+   hashedPassword: await bcrypt.hash('password123', 10),
+   role: 'ADMIN',
+   status: 'active',
+}
 ```
 
 Kemudian jalankan seeder ulang:
@@ -64,51 +57,60 @@ npm run db:seed
 
 ### Metode 2: Melalui Database Langsung
 
-Jika menggunakan database viewer (seperti Prisma Studio):
+Jika ingin menambah admin langsung tanpa API, edit file storage lokal:
 
-1. **Buka Prisma Studio:**
+1. **Buka file data lokal:**
    ```bash
-   npx prisma studio
+   data/local-db.json
    ```
 
-2. **Buka tabel User dan tambah record baru:**
+2. **Tambah object baru ke array `users`:**
    - name: Nama admin
    - email: Email admin
    - hashedPassword: Hash dari password (gunakan bcrypt)
    - role: `ADMIN`
+   - status: `active`
 
 ### Metode 3: Script Manual
 
 Buat file script terpisah `scripts/add-admin.js`:
 
 ```javascript
-const { PrismaClient } = require('@prisma/client')
-const bcrypt = require('bcrypt')
+const fs = require('fs/promises')
+const path = require('path')
+const { randomUUID } = require('crypto')
+const bcrypt = require('bcryptjs')
 
-const prisma = new PrismaClient()
+const dataFile = path.join(process.cwd(), 'data', 'local-db.json')
 
 async function addAdmin() {
+  const raw = await fs.readFile(dataFile, 'utf8').catch(() => '{"users":[],"emissions":[]}')
+  const data = JSON.parse(raw)
   const email = 'neradmin@tebuskarbon.com'
   const password = 'securepassword123'
   const name = 'Admin Baru'
   
   const hashedPassword = await bcrypt.hash(password, 10)
   
-  const admin = await prisma.user.create({
-    data: {
-      name,
-      email,
-      hashedPassword,
-      role: 'ADMIN',
-    },
-  })
+  const admin = {
+    id: randomUUID(),
+    name,
+    email,
+    hashedPassword,
+    role: 'ADMIN',
+    status: 'active',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  }
+
+  data.users.push(admin)
+  await fs.mkdir(path.dirname(dataFile), { recursive: true })
+  await fs.writeFile(dataFile, JSON.stringify(data, null, 2), 'utf8')
   
   console.log('Admin baru berhasil dibuat:', admin.email)
 }
 
-addAdmin()
-  .catch(console.error)
-  .finally(() => prisma.$disconnect())
+addAdmin().catch(console.error)
 ```
 
 Jalankan dengan:
@@ -165,17 +167,17 @@ Selalu pastikan ada minimal 2 admin aktif untuk menghindari lockout.
 ### Tidak bisa login sebagai admin:
 1. Pastikan seeder sudah dijalankan
 2. Cek kredensial: `admin@tebuskarbon.com` / `admin123`
-3. Cek database apakah user admin ada
+3. Cek file `data/local-db.json` apakah user admin ada
 4. Cek console browser untuk error
 
 ### Tidak bisa akses halaman admin:
 1. Pastikan login dengan akun admin
-2. Cek role di database: harus `ADMIN`
+2. Cek role di `data/local-db.json`: harus `ADMIN`
 3. Clear browser cache dan cookies
 
 ### Error saat seeder:
-1. Pastikan database connection string benar di `.env`
-2. Jalankan `npx prisma db push` terlebih dahulu
+1. Pastikan file `data/local-db.json` bisa dibuat di folder project
+2. Jalankan `npm run db:reset` lalu `npm run db:seed`
 3. Cek apakah dependencies terinstall: `npm install`
 
 ---

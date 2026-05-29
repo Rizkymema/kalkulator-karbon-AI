@@ -1,7 +1,0 @@
--- AlterTable
-ALTER TABLE "User" ADD COLUMN "about" TEXT;
-ALTER TABLE "User" ADD COLUMN "city" TEXT;
-ALTER TABLE "User" ADD COLUMN "gender" TEXT;
-ALTER TABLE "User" ADD COLUMN "instagram" TEXT;
-ALTER TABLE "User" ADD COLUMN "job" TEXT;
-ALTER TABLE "User" ADD COLUMN "phone" TEXT;

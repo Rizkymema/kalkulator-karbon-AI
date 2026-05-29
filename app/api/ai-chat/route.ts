@@ -68,25 +68,21 @@ function getFallbackResponse(message: string): string {
 
 export async function POST(request: NextRequest) {
   try {
-    // Check if user is authenticated
+    // Get session if user is logged in (optional)
     const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
 
-    const { message, context } = await request.json()
+    const { message, context, history } = await request.json()
 
     if (!message) {
       return NextResponse.json({ error: 'Message is required' }, { status: 400 })
     }
 
-    // Check if API key is available
-    const apiKey = process.env.XAI_API_KEY
-    const baseUrl = process.env.XAI_BASE_URL || 'https://api.x.ai/v1'
+    // Check if Gemini API key is available
+    const apiKey = process.env.GEMINI_API_KEY?.trim() || ''
     
     // If no API key, use fallback responses
     if (!apiKey || apiKey.trim() === '') {
-      console.log('No XAI_API_KEY found, using fallback responses')
+      console.log('No GEMINI_API_KEY found, using fallback responses')
       
       // Simulate some delay for natural feel
       await new Promise(resolve => setTimeout(resolve, 500))
@@ -111,50 +107,73 @@ Tugas Anda:
 5. Menjawab pertanyaan tentang perubahan iklim dan sustainability
 
 Konteks pengguna:
-- Nama: ${session.user?.name || 'Pengguna'}
-- Email: ${session.user?.email}
-${context ? `- Data konteks: ${context}` : ''}
+- Nama: ${session?.user?.name || 'Pengguna'}
+- Email: ${session?.user?.email || 'Tidak tersedia'}
+${context ? `- Data konteks aktivitas karbon: ${context}` : ''}
 
 Gaya komunikasi:
-- Ramah dan informatif
-- Fokus pada solusi praktis
-- Gunakan bahasa Indonesia
+- Ramah, antusias, dan informatif
+- Fokus pada solusi praktis dan aksi nyata
+- Gunakan bahasa Indonesia yang baik dan natural
 - Berikan contoh konkret
-- Gunakan emoji untuk membuat respons lebih menarik
+- Gunakan emoji secara kreatif untuk membuat respons menarik
 - Dorong aksi positif untuk lingkungan
 
-Jangan membahas topik di luar lingkungan, emisi karbon, dan sustainability.`
+Batasan: Jangan membahas topik di luar kelestarian lingkungan, emisi karbon, energi bersih, daur ulang, gaya hidup hijau, dan sustainability.`
 
-    // Call xAI API (Grok)
-    console.log('Calling xAI API...')
-
-    const response = await fetch(`${baseUrl}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'grok-beta',
-        messages: [
-          {
-            role: 'system',
-            content: systemPrompt
-          },
-          {
-            role: 'user',
-            content: message
-          }
-        ],
-        max_tokens: 800,
-        temperature: 0.7,
-        stream: false
+    // Map history to Gemini contents format
+    const contents: any[] = []
+    
+    if (history && Array.isArray(history)) {
+      history.forEach((msg: any) => {
+        if (msg.role === 'user' || msg.role === 'assistant') {
+          contents.push({
+            role: msg.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: msg.content }]
+          })
+        }
       })
-    })
+    }
+    
+    // Add current message to contents if not already at the end of history
+    const lastContent = contents[contents.length - 1]
+    if (!lastContent || lastContent.role !== 'user' || lastContent.parts[0].text !== message) {
+      contents.push({
+        role: 'user',
+        parts: [{ text: message }]
+      })
+    }
+
+    // Call Gemini API
+    console.log('Calling Gemini API...')
+    
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents,
+          systemInstruction: {
+            parts: [
+              {
+                text: systemPrompt
+              }
+            ]
+          },
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 800,
+          }
+        })
+      }
+    )
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'Unknown error')
-      console.error('xAI API Error:', {
+      console.error('Gemini API Error:', {
         status: response.status,
         statusText: response.statusText,
         body: errorText
@@ -172,7 +191,7 @@ Jangan membahas topik di luar lingkungan, emisi karbon, dan sustainability.`
     }
 
     const data = await response.json()
-    const aiResponse = data.choices?.[0]?.message?.content
+    const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text
 
     if (!aiResponse) {
       // Fallback if no response content

@@ -55,16 +55,14 @@ export default function HasilLengkapPage() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login")
-    }
-    
     if (session?.user?.role === "ADMIN") {
       router.push("/admin")
     }
 
     if (session?.user) {
       fetchEmissions()
+    } else if (status !== "loading") {
+      setIsLoading(false)
     }
   }, [session, status, router])
 
@@ -86,9 +84,6 @@ export default function HasilLengkapPage() {
     return <div className="flex justify-center items-center min-h-screen">Loading...</div>
   }
 
-  if (!session) {
-    return null
-  }
 
   // Calculate detailed statistics
   const totalEmissions = emissions.reduce((sum, record) => sum + record.totalEmisi, 0)
@@ -171,39 +166,42 @@ export default function HasilLengkapPage() {
   }
 
   const getImpactLevel = (emissions: number) => {
-    if (emissions <= 1.5) return { level: 'Rendah', color: 'bg-green-100 text-green-800', desc: 'Sangat baik! Anda sudah ramah lingkungan' }
-    if (emissions <= 2.5) return { level: 'Sedang', color: 'bg-yellow-100 text-yellow-800', desc: 'Baik, masih bisa ditingkatkan' }
-    return { level: 'Tinggi', color: 'bg-red-100 text-red-800', desc: 'Perlu perbaikan signifikan' }
+    if (emissions <= 1.5) return { level: 'Rendah', color: 'bg-green-950/30 text-green-400 border border-green-500/20', desc: 'Sangat baik! Anda sudah ramah lingkungan' }
+    if (emissions <= 2.5) return { level: 'Sedang', color: 'bg-yellow-950/30 text-yellow-400 border border-yellow-500/20', desc: 'Baik, masih bisa ditingkatkan' }
+    return { level: 'Tinggi', color: 'bg-red-950/30 text-red-400 border border-red-500/20', desc: 'Perlu perbaikan signifikan' }
   }
 
   const impact = getImpactLevel(avgEmissions)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-8">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-[#030a08] text-slate-200 pt-36 pb-12 relative overflow-hidden">
+      {/* Background radial glow */}
+      <div className="absolute top-0 left-0 right-0 h-[400px] bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.06),transparent_50%)] pointer-events-none" />
+
+      <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-800 mb-2 flex items-center gap-3">
-                <BarChart3 className="h-8 w-8 text-blue-600" />
+              <h1 className="text-3xl font-black font-display uppercase tracking-tight text-white mb-2 flex items-center gap-3">
+                <BarChart3 className="h-8 w-8 text-emerald-400" />
                 Hasil Lengkap
               </h1>
-              <p className="text-gray-600">
+              <p className="text-slate-400 font-medium">
                 Analisis mendalam emisi karbon dan rekomendasi personalisasi
               </p>
             </div>
-            <div className="flex gap-3">
-              <Button variant="outline" size="sm">
+            <div className="flex flex-wrap gap-3">
+              <Button variant="outline" size="sm" className="border-white/10 text-white hover:bg-white/10 rounded-xl font-bold">
                 <Download className="h-4 w-4 mr-2" />
                 Export
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="border-white/10 text-white hover:bg-white/10 rounded-xl font-bold">
                 <Share2 className="h-4 w-4 mr-2" />
                 Bagikan
               </Button>
               <Link href="/kalkulator">
-                <Button className="bg-green-600 hover:bg-green-700">
+                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl">
                   <Zap className="h-4 w-4 mr-2" />
                   Hitung Ulang
                 </Button>
@@ -214,50 +212,50 @@ export default function HasilLengkapPage() {
 
         {/* Quick Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+          <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Total Emisi</p>
-                  <p className="text-2xl font-bold text-gray-900">{totalEmissions.toFixed(2)} ton</p>
+                  <p className="text-sm font-medium text-slate-400">Total Emisi</p>
+                  <p className="text-2xl font-bold text-white">{totalEmissions.toFixed(2)} ton</p>
                 </div>
-                <PieChart className="h-8 w-8 text-blue-600" />
+                <PieChart className="h-8 w-8 text-emerald-450" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+          <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Rata-rata</p>
-                  <p className="text-2xl font-bold text-gray-900">{avgEmissions.toFixed(2)} ton</p>
+                  <p className="text-sm font-medium text-slate-400">Rata-rata</p>
+                  <p className="text-2xl font-bold text-white">{avgEmissions.toFixed(2)} ton</p>
                 </div>
-                <LineChart className="h-8 w-8 text-green-600" />
+                <LineChart className="h-8 w-8 text-green-500" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+          <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Pohon Dibutuhkan</p>
-                  <p className="text-2xl font-bold text-gray-900">{totalTrees}</p>
+                  <p className="text-sm font-medium text-slate-400">Pohon Dibutuhkan</p>
+                  <p className="text-2xl font-bold text-white">{totalTrees}</p>
                 </div>
-                <Leaf className="h-8 w-8 text-yellow-600" />
+                <Leaf className="h-8 w-8 text-yellow-500" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+          <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Level Dampak</p>
+                  <p className="text-sm font-medium text-slate-400">Level Dampak</p>
                   <Badge className={impact.color}>{impact.level}</Badge>
                 </div>
-                <Target className="h-8 w-8 text-purple-600" />
+                <Target className="h-8 w-8 text-purple-400" />
               </div>
             </CardContent>
           </Card>
@@ -265,11 +263,11 @@ export default function HasilLengkapPage() {
 
         {/* Main Content Tabs */}
         <Tabs value={selectedView} onValueChange={(value) => setSelectedView(value as any)} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-1/2">
-            <TabsTrigger value="overview">Ringkasan</TabsTrigger>
-            <TabsTrigger value="breakdown">Detail</TabsTrigger>
-            <TabsTrigger value="trends">Tren</TabsTrigger>
-            <TabsTrigger value="comparison">Perbandingan</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4 lg:w-1/2 bg-slate-950/60 border border-white/5 p-1 rounded-xl">
+            <TabsTrigger value="overview" className="rounded-lg data-[state=active]:bg-emerald-600 data-[state=active]:text-white">Ringkasan</TabsTrigger>
+            <TabsTrigger value="breakdown" className="rounded-lg data-[state=active]:bg-emerald-600 data-[state=active]:text-white">Detail</TabsTrigger>
+            <TabsTrigger value="trends" className="rounded-lg data-[state=active]:bg-emerald-600 data-[state=active]:text-white">Tren</TabsTrigger>
+            <TabsTrigger value="comparison" className="rounded-lg data-[state=active]:bg-emerald-600 data-[state=active]:text-white">Perbandingan</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
@@ -277,10 +275,10 @@ export default function HasilLengkapPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Impact Assessment */}
               <div className="lg:col-span-2">
-                <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+                <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Award className="h-5 w-5 text-green-600" />
+                    <CardTitle className="flex items-center gap-2 text-white">
+                      <Award className="h-5 w-5 text-green-400" />
                       Penilaian Dampak Lingkungan
                     </CardTitle>
                   </CardHeader>
@@ -290,22 +288,22 @@ export default function HasilLengkapPage() {
                         <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-r from-green-400 to-blue-500 mb-4">
                           <span className="text-2xl font-bold text-white">{avgEmissions.toFixed(1)}</span>
                         </div>
-                        <h3 className="text-xl font-bold text-gray-900">Emisi Rata-rata per Tahun</h3>
-                        <p className="text-gray-600">{impact.desc}</p>
+                        <h3 className="text-xl font-bold text-white">Emisi Rata-rata per Tahun</h3>
+                        <p className="text-slate-400 mt-1">{impact.desc}</p>
                       </div>
 
                       <div className="grid grid-cols-3 gap-4 text-center">
-                        <div className="p-4 bg-green-50 rounded-lg">
-                          <p className="text-2xl font-bold text-green-600">1.5</p>
-                          <p className="text-sm text-green-700">Target Global</p>
+                        <div className="p-4 bg-green-950/20 border border-green-500/10 rounded-xl">
+                          <p className="text-2xl font-bold text-green-400">1.5</p>
+                          <p className="text-xs text-green-300/80">Target Global</p>
                         </div>
-                        <div className="p-4 bg-yellow-50 rounded-lg">
-                          <p className="text-2xl font-bold text-yellow-600">2.3</p>
-                          <p className="text-sm text-yellow-700">Rata-rata Indonesia</p>
+                        <div className="p-4 bg-yellow-950/20 border border-yellow-500/10 rounded-xl">
+                          <p className="text-2xl font-bold text-yellow-400">2.3</p>
+                          <p className="text-xs text-yellow-300/80">Rata-rata Indonesia</p>
                         </div>
-                        <div className="p-4 bg-blue-50 rounded-lg">
-                          <p className="text-2xl font-bold text-blue-600">{avgEmissions.toFixed(1)}</p>
-                          <p className="text-sm text-blue-700">Emisi Anda</p>
+                        <div className="p-4 bg-blue-950/20 border border-blue-500/10 rounded-xl">
+                          <p className="text-2xl font-bold text-blue-400">{avgEmissions.toFixed(1)}</p>
+                          <p className="text-xs text-blue-300/80">Emisi Anda</p>
                         </div>
                       </div>
                     </div>
@@ -315,35 +313,35 @@ export default function HasilLengkapPage() {
 
               {/* Quick Actions */}
               <div className="space-y-6">
-                <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+                <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
                   <CardHeader>
-                    <CardTitle>Aksi Rekomendasi</CardTitle>
+                    <CardTitle className="text-white">Aksi Rekomendasi</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      <Button className="w-full justify-start" variant="outline">
-                        <Target className="h-4 w-4 mr-2" />
+                      <Button className="w-full justify-start border-white/5 text-slate-350 hover:bg-white/5 hover:text-white" variant="outline">
+                        <Target className="h-4 w-4 mr-2 text-purple-400" />
                         Set Target Pribadi
                       </Button>
-                      <Button className="w-full justify-start" variant="outline">
-                        <Calendar className="h-4 w-4 mr-2" />
+                      <Button className="w-full justify-start border-white/5 text-slate-350 hover:bg-white/5 hover:text-white" variant="outline">
+                        <Calendar className="h-4 w-4 mr-2 text-blue-400" />
                         Jadwal Evaluasi
                       </Button>
-                      <Button className="w-full justify-start" variant="outline">
-                        <Share2 className="h-4 w-4 mr-2" />
+                      <Button className="w-full justify-start border-white/5 text-slate-350 hover:bg-white/5 hover:text-white" variant="outline">
+                        <Share2 className="h-4 w-4 mr-2 text-emerald-400" />
                         Bagikan Progress
                       </Button>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="border-0 shadow-lg bg-gradient-to-br from-green-500 to-blue-600 text-white">
+                <Card className="border border-emerald-500/20 bg-gradient-to-br from-emerald-950/40 to-blue-950/40 text-white backdrop-blur-md">
                   <CardContent className="p-6">
-                    <h3 className="font-bold mb-2">💡 Tips Hari Ini</h3>
-                    <p className="text-sm text-green-100 mb-4">
+                    <h3 className="font-bold mb-2 flex items-center gap-1.5 text-emerald-350">💡 Tips Hari Ini</h3>
+                    <p className="text-sm text-slate-300 mb-4 leading-relaxed">
                       Matikan peralatan elektronik saat tidak digunakan untuk menghemat energi hingga 10%
                     </p>
-                    <Badge className="bg-white/20 text-white">
+                    <Badge className="bg-white/10 border border-white/10 text-white">
                       Hemat Listrik
                     </Badge>
                   </CardContent>
@@ -354,10 +352,10 @@ export default function HasilLengkapPage() {
 
           {/* Breakdown Tab */}
           <TabsContent value="breakdown" className="space-y-6">
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
               <CardHeader>
-                <CardTitle>Breakdown Detail per Kategori</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-white">Breakdown Detail per Kategori</CardTitle>
+                <CardDescription className="text-slate-400">
                   Analisis mendalam kontribusi setiap kategori terhadap total emisi
                 </CardDescription>
               </CardHeader>
@@ -366,24 +364,24 @@ export default function HasilLengkapPage() {
                   {detailedBreakdown.map((item, index) => {
                     const IconComponent = categoryIcons[item.category as keyof typeof categoryIcons]
                     return (
-                      <div key={index} className="p-6 bg-gray-50 rounded-lg">
+                      <div key={index} className="p-6 bg-slate-950/40 border border-white/5 rounded-xl">
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-3">
-                            <div className="p-2 bg-white rounded-lg">
-                              <IconComponent className="h-6 w-6 text-blue-600" />
+                            <div className="p-2 bg-white/5 border border-white/10 rounded-lg">
+                              <IconComponent className="h-6 w-6 text-emerald-400" />
                             </div>
                             <div>
-                              <h3 className="font-semibold text-gray-900">{item.category}</h3>
-                              <p className="text-sm text-gray-500">{item.value.toFixed(2)} ton CO₂ ({item.percentage}%)</p>
+                              <h3 className="font-semibold text-white">{item.category}</h3>
+                              <p className="text-sm text-slate-400">{item.value.toFixed(2)} ton CO₂ ({item.percentage}%)</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
                             {getTrendIcon(item.trend)}
-                            <Badge variant="outline">{item.percentage}%</Badge>
+                            <Badge variant="outline" className="border-white/10 text-slate-300">{item.percentage}%</Badge>
                           </div>
                         </div>
 
-                        <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
+                        <div className="w-full bg-slate-800 rounded-full h-3 mb-4">
                           <div
                             className="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-500"
                             style={{ width: `${item.percentage}%` }}
@@ -391,10 +389,10 @@ export default function HasilLengkapPage() {
                         </div>
 
                         <div>
-                          <h4 className="font-medium text-gray-800 mb-2">Rekomendasi Perbaikan:</h4>
+                          <h4 className="font-semibold text-slate-300 mb-2">Rekomendasi Perbaikan:</h4>
                           <ul className="space-y-1">
                             {item.recommendations.map((rec, recIndex) => (
-                              <li key={recIndex} className="text-sm text-gray-600 flex items-start gap-2">
+                              <li key={recIndex} className="text-sm text-slate-400 flex items-start gap-2">
                                 <span className="text-green-500 mt-1">•</span>
                                 {rec}
                               </li>
@@ -411,17 +409,17 @@ export default function HasilLengkapPage() {
 
           {/* Trends Tab */}
           <TabsContent value="trends" className="space-y-6">
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
               <CardHeader>
-                <CardTitle>Analisis Tren Emisi</CardTitle>
+                <CardTitle className="text-white">Analisis Tren Emisi</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-center py-12">
-                  <LineChart className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-700 mb-2">Grafik Tren Akan Tersedia</h3>
-                  <p className="text-gray-500 mb-6">Lakukan beberapa perhitungan emisi untuk melihat tren perubahan</p>
+                  <LineChart className="h-16 w-16 text-slate-655 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-slate-300 mb-2">Grafik Tren Akan Tersedia</h3>
+                  <p className="text-slate-500 mb-6">Lakukan beberapa perhitungan emisi untuk melihat tren perubahan</p>
                   <Link href="/kalkulator">
-                    <Button>Tambah Data Emisi</Button>
+                    <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl">Tambah Data Emisi</Button>
                   </Link>
                 </div>
               </CardContent>
@@ -430,42 +428,42 @@ export default function HasilLengkapPage() {
 
           {/* Comparison Tab */}
           <TabsContent value="comparison" className="space-y-6">
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
               <CardHeader>
-                <CardTitle>Perbandingan Benchmark</CardTitle>
+                <CardTitle className="text-white">Perbandingan Benchmark</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="text-center p-6 bg-green-50 rounded-lg">
-                      <h3 className="font-bold text-green-800 mb-2">Target Ideal</h3>
-                      <p className="text-3xl font-bold text-green-600">1.5 ton</p>
-                      <p className="text-sm text-green-700">Paris Agreement</p>
+                    <div className="text-center p-6 bg-green-950/20 border border-green-500/10 rounded-xl">
+                      <h3 className="font-bold text-green-300 mb-2">Target Ideal</h3>
+                      <p className="text-3xl font-black text-green-400">1.5 ton</p>
+                      <p className="text-xs text-green-400/80">Paris Agreement</p>
                     </div>
-                    <div className="text-center p-6 bg-yellow-50 rounded-lg">
-                      <h3 className="font-bold text-yellow-800 mb-2">Rata-rata Indonesia</h3>
-                      <p className="text-3xl font-bold text-yellow-600">2.3 ton</p>
-                      <p className="text-sm text-yellow-700">Data Nasional</p>
+                    <div className="text-center p-6 bg-yellow-950/20 border border-yellow-500/10 rounded-xl">
+                      <h3 className="font-bold text-yellow-300 mb-2">Rata-rata Indonesia</h3>
+                      <p className="text-3xl font-black text-yellow-400">2.3 ton</p>
+                      <p className="text-xs text-yellow-400/80">Data Nasional</p>
                     </div>
-                    <div className="text-center p-6 bg-blue-50 rounded-lg">
-                      <h3 className="font-bold text-blue-800 mb-2">Emisi Anda</h3>
-                      <p className="text-3xl font-bold text-blue-600">{avgEmissions.toFixed(1)} ton</p>
-                      <p className="text-sm text-blue-700">Perhitungan Personal</p>
+                    <div className="text-center p-6 bg-blue-950/20 border border-blue-500/10 rounded-xl">
+                      <h3 className="font-bold text-blue-300 mb-2">Emisi Anda</h3>
+                      <p className="text-3xl font-black text-blue-400">{avgEmissions.toFixed(1)} ton</p>
+                      <p className="text-xs text-blue-400/80">Perhitungan Personal</p>
                     </div>
                   </div>
 
                   {avgEmissions <= 1.5 ? (
-                    <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-                      <h3 className="font-bold text-green-800 mb-2">🎉 Selamat!</h3>
-                      <p className="text-green-700">Emisi Anda sudah di bawah target global. Pertahankan pola hidup ramah lingkungan ini!</p>
+                    <div className="bg-green-950/20 p-6 rounded-xl border border-green-500/15">
+                      <h3 className="font-bold text-green-300 mb-2">🎉 Selamat!</h3>
+                      <p className="text-slate-400 text-sm">Emisi Anda sudah di bawah target global. Pertahankan pola hidup ramah lingkungan ini!</p>
                     </div>
                   ) : (
-                    <div className="bg-orange-50 p-6 rounded-lg border border-orange-200">
-                      <h3 className="font-bold text-orange-800 mb-2">🎯 Target Perbaikan</h3>
-                      <p className="text-orange-700 mb-3">
+                    <div className="bg-orange-955/15 p-6 rounded-xl border border-orange-500/15">
+                      <h3 className="font-bold text-orange-300 mb-2">🎯 Target Perbaikan</h3>
+                      <p className="text-slate-400 text-sm mb-3">
                         Anda perlu mengurangi {(avgEmissions - 1.5).toFixed(1)} ton CO₂ untuk mencapai target global.
                       </p>
-                      <p className="text-sm text-orange-600">
+                      <p className="text-xs text-orange-400">
                         Fokus pada kategori dengan emisi tertinggi untuk hasil maksimal.
                       </p>
                     </div>

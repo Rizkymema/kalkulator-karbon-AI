@@ -14,10 +14,8 @@ const Alert = React.forwardRef<
     data-testid={testId}
     className={cn(
       "relative w-full rounded-lg border p-4",
-      {
-        "border-border text-foreground": variant === "default",
-        "border-destructive/50 text-destructive dark:border-destructive": variant === "destructive",
-      },
+      variant === "default" && "border-border text-foreground",
+      variant === "destructive" && "border-destructive/50 text-destructive dark:border-destructive",
       className
     )}
     {...props}

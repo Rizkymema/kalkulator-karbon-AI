@@ -1,15 +1,15 @@
 "use client"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Calculator, CheckCircle, TrendingDown, Leaf, ArrowRight, Play } from "lucide-react"
+import { Calculator, CheckCircle, TrendingDown, Leaf } from "lucide-react"
 import Link from "next/link"
 
 export default function CaraMenggunakanPage() {
   const steps = [
     {
-      icon: <Calculator className="h-8 w-8 text-emerald-600" />,
-      title: "1. Isi Data Emisi Anda",
+      icon: <Calculator className="h-6 w-6 text-emerald-400" />,
+      title: "Isi Data Emisi Anda",
       description: "Masukkan data konsumsi harian Anda seperti transportasi, listrik, gas, dan limbah",
       details: [
         "Pilih jenis kendaraan yang sering digunakan",
@@ -19,8 +19,8 @@ export default function CaraMenggunakanPage() {
       ]
     },
     {
-      icon: <CheckCircle className="h-8 w-8 text-blue-600" />,
-      title: "2. Cek Hasil Perhitungan",
+      icon: <CheckCircle className="h-6 w-6 text-emerald-400" />,
+      title: "Cek Hasil Perhitungan",
       description: "Sistem akan menghitung total emisi karbon Anda dalam satuan ton CO₂",
       details: [
         "Lihat breakdown emisi per kategori",
@@ -30,8 +30,8 @@ export default function CaraMenggunakanPage() {
       ]
     },
     {
-      icon: <TrendingDown className="h-8 w-8 text-orange-600" />,
-      title: "3. Dapatkan Rekomendasi",
+      icon: <TrendingDown className="h-6 w-6 text-emerald-400" />,
+      title: "Dapatkan Rekomendasi",
       description: "Terima saran untuk mengurangi jejak karbon dan gaya hidup yang lebih ramah lingkungan",
       details: [
         "Tips hemat energi di rumah",
@@ -41,9 +41,9 @@ export default function CaraMenggunakanPage() {
       ]
     },
     {
-      icon: <Leaf className="h-8 w-8 text-green-600" />,
-      title: "4. Pantau Progress Anda",
-      description: "Lacak perkembangan pengurangan emisi Anda dari waktu ke waktu",
+      icon: <Leaf className="h-6 w-6 text-emerald-400" />,
+      title: "Pantau Progress Anda",
+      description: "Lacak perkembangan penekanan emisi Anda dari waktu ke waktu",
       details: [
         "Simpan riwayat perhitungan",
         "Lihat grafik perkembangan",
@@ -54,145 +54,145 @@ export default function CaraMenggunakanPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+    <div className="min-h-screen bg-[#030a08] text-slate-200 relative overflow-hidden pt-36 pb-20">
+      {/* Background radial glow */}
+      <div className="absolute top-0 left-0 right-0 h-[500px] bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.08),transparent_60%)] pointer-events-none" />
+
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-emerald-600 to-green-600 text-white py-16">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Cara Menggunakan Kalkulator Emisi
-            </h1>
-            <p className="text-xl text-emerald-100 mb-8 max-w-3xl mx-auto">
-              Ikuti panduan langkah demi langkah untuk menghitung jejak karbon Anda dan mendapatkan rekomendasi untuk gaya hidup yang lebih ramah lingkungan
-            </p>
-            <div className="flex items-center justify-center space-x-4">
-              <Button asChild className="bg-white text-emerald-600 hover:bg-emerald-50">
-                <Link href="/kalkulator">
-                  <Calculator className="h-5 w-5 mr-2" />
-                  Mulai Hitung Sekarang
-                </Link>
-              </Button>
-              <Button variant="outline" className="border-white text-white hover:bg-white/10">
-                <Play className="h-5 w-5 mr-2" />
-                Tonton Video Tutorial
-              </Button>
-            </div>
+      <div className="max-w-6xl mx-auto px-6 relative z-10 mb-16">
+        <div className="text-center max-w-3xl mx-auto space-y-6">
+          <h1 className="text-4xl md:text-5xl font-black font-display uppercase tracking-wider text-white">
+            Cara Menggunakan
+          </h1>
+          <p className="text-lg text-slate-400 font-medium leading-relaxed">
+            Ikuti panduan langkah demi langkah untuk menghitung jejak karbon Anda, memantau dampak lingkungan, dan mengambil tindakan nyata menuju gaya hidup berkelanjutan.
+          </p>
+          <div className="flex justify-center pt-4">
+            <Button asChild className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-6 px-8 rounded-2xl transition-all duration-300 hover:shadow-[0_0_25px_rgba(16,185,129,0.25)] text-sm">
+              <Link href="/kalkulator" className="flex items-center gap-2">
+                <Calculator className="h-4.5 w-4.5 text-white" />
+                Mulai Hitung Sekarang
+              </Link>
+            </Button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-16">
+      <div className="max-w-6xl mx-auto px-6 relative z-10 space-y-20">
+        
         {/* Steps Section */}
-        <div className="mb-16">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              4 Langkah Mudah Menghitung Emisi Karbon
+        <div className="space-y-12">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl font-black font-display uppercase text-white tracking-wider">
+              4 Langkah Mudah Menuju Ramah Lingkungan
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Proses yang sederhana dan mudah dipahami untuk membantu Anda memahami jejak karbon pribadi
+            <p className="text-slate-450 max-w-2xl mx-auto font-semibold">
+              Proses kalkulasi yang sederhana dan intuitif dirancang untuk membantu Anda memahami dampak emisi harian.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {steps.map((step, index) => (
-              <Card key={index} className="relative overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <CardHeader className="pb-4">
+              <Card 
+                key={index} 
+                className="relative overflow-hidden p-8 rounded-3xl bg-slate-950/30 border border-white/5 backdrop-blur-md transition-all duration-300 hover:border-emerald-500/20 hover:shadow-[0_10px_30px_rgba(16,185,129,0.03)] group"
+              >
+                {/* Step Watermark Number */}
+                <div className="absolute -top-4 -right-2 text-8xl font-black text-white/[0.02] group-hover:text-emerald-500/[0.04] transition-colors select-none pointer-events-none font-display">
+                  0{index + 1}
+                </div>
+
+                <CardContent className="p-0 space-y-6">
                   <div className="flex items-center space-x-4">
-                    <div className="p-3 rounded-full bg-gray-100">
+                    <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl text-emerald-400 group-hover:bg-emerald-500/20 transition-all duration-300">
                       {step.icon}
                     </div>
-                    <div>
-                      <CardTitle className="text-xl font-bold text-gray-900">
-                        {step.title}
-                      </CardTitle>
-                    </div>
+                    <h3 className="text-xl font-bold text-white">
+                      {step.title}
+                    </h3>
                   </div>
-                  <CardDescription className="text-gray-600 mt-3">
+
+                  <p className="text-sm text-slate-400 leading-relaxed font-medium">
                     {step.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
+                  </p>
+
+                  <ul className="space-y-3 pt-6 border-t border-white/5">
                     {step.details.map((detail, detailIndex) => (
-                      <li key={detailIndex} className="flex items-start space-x-3">
-                        <CheckCircle className="h-5 w-5 text-emerald-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700">{detail}</span>
+                      <li key={detailIndex} className="flex items-start space-x-3 text-sm text-slate-350 font-medium">
+                        <CheckCircle className="h-4.5 w-4.5 text-emerald-500/60 mt-0.5 flex-shrink-0" />
+                        <span>{detail}</span>
                       </li>
                     ))}
                   </ul>
                 </CardContent>
-                {index < steps.length - 1 && (
-                  <div className="hidden md:block absolute -right-4 top-1/2 transform -translate-y-1/2 z-10">
-                    <div className="bg-white rounded-full p-2 shadow-lg">
-                      <ArrowRight className="h-6 w-6 text-emerald-600" />
-                    </div>
-                  </div>
-                )}
               </Card>
             ))}
           </div>
         </div>
 
         {/* Tips Section */}
-        <div className="bg-white rounded-2xl p-8 shadow-lg">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-            Tips untuk Hasil yang Akurat
+        <div className="bg-slate-950/30 backdrop-blur-xl border border-white/5 rounded-3xl p-10 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+          
+          <h3 className="text-2xl font-black text-center text-white uppercase tracking-wider mb-12">
+            Tips Mendapatkan Hasil Presisi
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="h-16 w-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="h-8 w-8 text-emerald-600" />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+            <div className="text-center space-y-3">
+              <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl w-fit text-emerald-400 mx-auto">
+                <CheckCircle className="h-6 w-6" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Data yang Akurat</h4>
-              <p className="text-gray-600 text-sm">
-                Gunakan data konsumsi riil dari tagihan bulanan untuk hasil yang lebih presisi
+              <h4 className="font-bold text-white text-base">Gunakan Data Riil</h4>
+              <p className="text-slate-400 text-sm font-medium leading-relaxed max-w-xs mx-auto">
+                Gunakan angka riil dari tagihan listrik atau odometer kendaraan untuk kalkulasi yang lebih valid.
               </p>
             </div>
-            <div className="text-center">
-              <div className="h-16 w-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <TrendingDown className="h-8 w-8 text-blue-600" />
+
+            <div className="text-center space-y-3">
+              <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl w-fit text-emerald-400 mx-auto">
+                <TrendingDown className="h-6 w-6" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Konsistensi</h4>
-              <p className="text-gray-600 text-sm">
-                Lakukan perhitungan secara berkala untuk melihat tren pengurangan emisi
+              <h4 className="font-bold text-white text-base">Kalkulasi Berkala</h4>
+              <p className="text-slate-400 text-sm font-medium leading-relaxed max-w-xs mx-auto">
+                Lakukan perhitungan berkala (misal sebulan sekali) untuk mengamati tren keberhasilan pengurangan emisi.
               </p>
             </div>
-            <div className="text-center">
-              <div className="h-16 w-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Leaf className="h-8 w-8 text-orange-600" />
+
+            <div className="text-center space-y-3">
+              <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl w-fit text-emerald-400 mx-auto">
+                <Leaf className="h-6 w-6" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Tindak Lanjut</h4>
-              <p className="text-gray-600 text-sm">
-                Implementasikan rekomendasi yang diberikan untuk dampak maksimal
+              <h4 className="font-bold text-white text-base">Terapkan Rekomendasi</h4>
+              <p className="text-slate-400 text-sm font-medium leading-relaxed max-w-xs mx-auto">
+                Implementasikan langkah-langkah hemat emisi yang disarankan AI guna merasakan dampak nyata lingkungan.
               </p>
             </div>
           </div>
         </div>
 
         {/* CTA Section */}
-        <div className="text-center mt-16">
-          <div className="bg-gradient-to-r from-emerald-500 to-green-500 rounded-2xl p-8 text-white">
-            <h3 className="text-2xl font-bold mb-4">
-              Siap Mulai Perjalanan Ramah Lingkungan?
+        <div className="bg-gradient-to-br from-slate-950/80 to-emerald-950/15 border border-white/5 rounded-3xl p-10 text-center relative overflow-hidden shadow-2xl">
+          <div className="absolute bottom-0 right-0 w-36 h-36 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="max-w-2xl mx-auto space-y-6 relative z-10">
+            <h3 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-wider">
+              Siap Menjadi Pahlawan Lingkungan?
             </h3>
-            <p className="text-emerald-100 mb-6 max-w-2xl mx-auto">
-              Mulai hitung jejak karbon Anda sekarang dan dapatkan panduan personal untuk gaya hidup yang lebih berkelanjutan
+            <p className="text-slate-400 text-base font-medium leading-relaxed">
+              Mulai hitung emisi Anda hari ini dan ambil langkah pertama untuk menjaga kelestarian bumi kita.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild className="bg-white text-emerald-600 hover:bg-emerald-50">
-                <Link href="/kalkulator">
-                  <Calculator className="h-5 w-5 mr-2" />
+            <div className="flex justify-center pt-2">
+              <Button asChild className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-6 px-8 rounded-2xl transition-all duration-300 hover:shadow-[0_0_25px_rgba(16,185,129,0.25)] text-sm">
+                <Link href="/kalkulator" className="flex items-center gap-2">
+                  <Calculator className="h-4.5 w-4.5 text-white" />
                   Mulai Hitung Emisi
-                </Link>
-              </Button>
-              <Button asChild variant="outline" className="border-white text-white hover:bg-white/10">
-                <Link href="/register">
-                  Daftar untuk Fitur Lengkap
                 </Link>
               </Button>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   )

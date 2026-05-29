@@ -25,12 +25,10 @@ export default function RiwayatPage() {
   const { riwayatAktivitas, totalKarbonDitebus } = useStore()
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/login?redirect=/riwayat')
-    }
-    
     if (session?.user) {
       fetchEmissions()
+    } else if (status !== 'loading') {
+      setIsLoading(false)
     }
   }, [session, status, router])
 
@@ -116,99 +114,102 @@ export default function RiwayatPage() {
 
   if (status === 'loading' || isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#030a08] flex items-center justify-center text-slate-200">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-green-600 mx-auto mb-4" />
-          <p className="text-gray-600">Memuat riwayat...</p>
+          <Loader2 className="w-12 h-12 animate-spin text-emerald-400 mx-auto mb-4" />
+          <p className="text-slate-400 font-medium">Memuat riwayat...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#030a08] text-slate-200 pt-36 pb-12 relative overflow-hidden">
+      {/* Background radial glow */}
+      <div className="absolute top-0 left-0 right-0 h-[400px] bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.06),transparent_50%)] pointer-events-none" />
+      
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-4">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            <h1 className="text-3xl font-black font-display uppercase tracking-tight text-white mb-4">
               Riwayat Aktivitas
             </h1>
             <button 
               onClick={fetchEmissions}
-              className="p-2 hover:bg-gray-200 rounded-full transition-colors mb-4"
+              className="p-2 hover:bg-slate-900/80 rounded-full transition-colors mb-4 border border-white/5 bg-slate-900/40"
               title="Refresh data"
             >
-              <RefreshCw className="w-5 h-5 text-gray-600" />
+              <RefreshCw className="w-5 h-5 text-slate-300" />
             </button>
           </div>
-          <p className="text-gray-600">
+          <p className="text-slate-400 font-medium">
             Lihat jejak karbon yang telah Anda hitung dan tebus
           </p>
         </div>
 
         {/* Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-sm p-6 text-center">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <BarChart3 className="w-6 h-6 text-green-600" />
+          <div className="bg-slate-900/40 border border-white/5 rounded-xl p-6 text-center">
+            <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <BarChart3 className="w-6 h-6 text-emerald-400" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-1">
+            <h3 className="text-2xl font-bold text-white mb-1">
               {formatEmission(totalFromDb || totalKarbonDitebus)}
             </h3>
-            <p className="text-gray-600 text-sm">Total Emisi</p>
+            <p className="text-slate-400 text-sm font-medium">Total Emisi</p>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm p-6 text-center">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <TreePine className="w-6 h-6 text-blue-600" />
+          <div className="bg-slate-900/40 border border-white/5 rounded-xl p-6 text-center">
+            <div className="w-12 h-12 bg-blue-500/10 border border-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <TreePine className="w-6 h-6 text-blue-400" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-1">
+            <h3 className="text-2xl font-bold text-white mb-1">
               {totalTreesFromDb || Math.ceil(totalKarbonDitebus / 15)}
             </h3>
-            <p className="text-gray-600 text-sm">Pohon Dibutuhkan</p>
+            <p className="text-slate-400 text-sm font-medium">Pohon Dibutuhkan</p>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm p-6 text-center">
-            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <TrendingUp className="w-6 h-6 text-orange-600" />
+          <div className="bg-slate-900/40 border border-white/5 rounded-xl p-6 text-center">
+            <div className="w-12 h-12 bg-amber-500/10 border border-amber-500/20 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <TrendingUp className="w-6 h-6 text-amber-400" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-1">
+            <h3 className="text-2xl font-bold text-white mb-1">
               {allRecords.length}
             </h3>
-            <p className="text-gray-600 text-sm">Kalkulasi</p>
+            <p className="text-slate-400 text-sm font-medium">Kalkulasi</p>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm p-6 text-center">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <Calendar className="w-6 h-6 text-purple-600" />
+          <div className="bg-slate-900/40 border border-white/5 rounded-xl p-6 text-center">
+            <div className="w-12 h-12 bg-purple-500/10 border border-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <Calendar className="w-6 h-6 text-purple-400" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-1">
+            <h3 className="text-2xl font-bold text-white mb-1">
               {allRecords.filter(item => item.aksiTebus).length}
             </h3>
-            <p className="text-gray-600 text-sm">Aksi Tebus</p>
+            <p className="text-slate-400 text-sm font-medium">Aksi Tebus</p>
           </div>
         </div>
 
         {/* Monthly Chart */}
         {Object.keys(monthlyData).length > 0 && (
-          <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+          <div className="bg-slate-900/40 border border-white/5 rounded-xl p-6 mb-8">
+            <h2 className="text-xl font-bold text-white mb-6">
               Emisi Per Bulan
             </h2>
             <div className="space-y-4">
               {Object.entries(monthlyData).map(([month, emission]) => (
                 <div key={month} className="flex items-center space-x-4">
-                  <div className="w-24 text-sm text-gray-600 font-medium">
+                  <div className="w-24 text-sm text-slate-400 font-bold">
                     {month}
                   </div>
-                  <div className="flex-1 bg-gray-200 rounded-full h-6 relative">
+                  <div className="flex-1 bg-slate-950/60 border border-white/5 rounded-full h-6 relative">
                     <div
                       className="bg-[#3AA17E] h-6 rounded-full flex items-center justify-end pr-2"
                       style={{
                         width: `${Math.min((emission / Math.max(...Object.values(monthlyData))) * 100, 100)}%`,
                       }}
                     >
-                      <span className="text-white text-xs font-medium">
+                      <span className="text-white text-xs font-bold">
                         {formatEmission(emission)}
                       </span>
                     </div>
@@ -220,43 +221,43 @@ export default function RiwayatPage() {
         )}
 
         {/* Activity List */}
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">
+        <div className="bg-slate-900/40 border border-white/5 rounded-xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-white/5">
+            <h2 className="text-xl font-bold text-white">
               Detail Aktivitas
             </h2>
           </div>
 
           {allRecords.length === 0 ? (
             <div className="text-center py-12">
-              <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <Calendar className="w-12 h-12 text-slate-500 mx-auto mb-4" />
+              <h3 className="text-lg font-bold text-white mb-2">
                 Belum Ada Aktivitas
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-slate-400 mb-6 font-medium">
                 Mulai hitung jejak karbon Anda untuk melihat riwayat aktivitas
               </p>
               <a
                 href="/kalkulator"
-                className="bg-[#3AA17E] text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors inline-flex items-center"
+                className="bg-emerald-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors inline-flex items-center"
               >
                 Mulai Kalkulasi
               </a>
             </div>
           ) : (
-            <div className="divide-y divide-gray-200">
+            <div className="divide-y divide-white/5">
               {allRecords.map((aktivitas, index) => (
-                <div key={aktivitas.id} className="px-6 py-4 hover:bg-gray-50 transition-colors">
+                <div key={aktivitas.id} className="px-6 py-4 hover:bg-slate-900/60 transition-colors">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
-                      <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <div className="w-10 h-10 bg-slate-950/60 border border-white/5 rounded-lg flex items-center justify-center">
                         {getActionIcon(aktivitas.aksiTebus)}
                       </div>
                       <div>
-                        <h3 className="font-medium text-gray-900">
+                        <h3 className="font-bold text-white">
                           Kalkulasi #{allRecords.length - index}
                         </h3>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-xs text-slate-400 font-medium">
                           {formatDate(aktivitas.tanggal)}
                         </p>
                       </div>
@@ -264,16 +265,16 @@ export default function RiwayatPage() {
 
                     <div className="flex items-center space-x-4">
                       <div className="text-right">
-                        <p className="font-semibold text-gray-900">
+                        <p className="font-bold text-white">
                           {formatEmission(aktivitas.totalEmisi)}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-xs text-slate-400 font-medium mt-0.5">
                           {aktivitas.pohonDibutuhkan} pohon
                         </p>
                       </div>
                       
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${getActionColor(
+                        className={`px-3 py-1 rounded-full text-xs font-bold ${getActionColor(
                           aktivitas.aksiTebus
                         )}`}
                       >
@@ -288,40 +289,40 @@ export default function RiwayatPage() {
         </div>
 
         {/* Tips Section */}
-        <div className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">
+        <div className="mt-8 bg-gradient-to-r from-slate-900/60 to-emerald-950/20 border border-white/5 rounded-xl p-6">
+          <h3 className="text-lg font-bold text-white mb-3">
             💡 Tips untuk Mengurangi Jejak Karbon
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-start space-x-3">
-              <div className="w-6 h-6 bg-green-200 rounded-full flex items-center justify-center mt-0.5">
-                <span className="text-green-700 text-xs font-bold">1</span>
+              <div className="w-6 h-6 bg-emerald-500/20 border border-emerald-500/30 rounded-full flex items-center justify-center mt-0.5">
+                <span className="text-emerald-400 text-xs font-bold">1</span>
               </div>
-              <p className="text-gray-700 text-sm">
+              <p className="text-slate-300 text-sm font-medium">
                 Gunakan transportasi umum atau bersepeda untuk perjalanan dekat
               </p>
             </div>
             <div className="flex items-start space-x-3">
-              <div className="w-6 h-6 bg-green-200 rounded-full flex items-center justify-center mt-0.5">
-                <span className="text-green-700 text-xs font-bold">2</span>
+              <div className="w-6 h-6 bg-emerald-500/20 border border-emerald-500/30 rounded-full flex items-center justify-center mt-0.5">
+                <span className="text-emerald-400 text-xs font-bold">2</span>
               </div>
-              <p className="text-gray-700 text-sm">
+              <p className="text-slate-300 text-sm font-medium">
                 Kurangi konsumsi daging dan pilih makanan lokal
               </p>
             </div>
             <div className="flex items-start space-x-3">
-              <div className="w-6 h-6 bg-green-200 rounded-full flex items-center justify-center mt-0.5">
-                <span className="text-green-700 text-xs font-bold">3</span>
+              <div className="w-6 h-6 bg-emerald-500/20 border border-emerald-500/30 rounded-full flex items-center justify-center mt-0.5">
+                <span className="text-emerald-400 text-xs font-bold">3</span>
               </div>
-              <p className="text-gray-700 text-sm">
+              <p className="text-slate-300 text-sm font-medium">
                 Hemat listrik dengan mematikan perangkat yang tidak digunakan
               </p>
             </div>
             <div className="flex items-start space-x-3">
-              <div className="w-6 h-6 bg-green-200 rounded-full flex items-center justify-center mt-0.5">
-                <span className="text-green-700 text-xs font-bold">4</span>
+              <div className="w-6 h-6 bg-emerald-500/20 border border-emerald-500/30 rounded-full flex items-center justify-center mt-0.5">
+                <span className="text-emerald-400 text-xs font-bold">4</span>
               </div>
-              <p className="text-gray-700 text-sm">
+              <p className="text-slate-300 text-sm font-medium">
                 Gunakan tas belanja dan botol minum yang dapat digunakan ulang
               </p>
             </div>

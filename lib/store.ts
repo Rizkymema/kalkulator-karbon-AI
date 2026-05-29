@@ -40,7 +40,7 @@ export interface TebusSummary {
   pohonDibutuhkan: number
   aksiTebus: 'tanam' | 'donasi' | 'tantangan' | null
   tanggal: string
-  emissionData: EmissionData
+  emissionData?: EmissionData
 }
 
 export interface LeaderboardUser {

@@ -28,7 +28,7 @@ export function GamificationBadges() {
   const calculateBadgeProgress = () => {
     const currentEmission = riwayatAktivitas.length > 0 ? riwayatAktivitas[0].totalEmisi : 0
     const totalSessions = riwayatAktivitas.length
-    
+
     const badgeDefinitions: Omit<Badge, 'currentProgress' | 'earned' | 'earnedDate'>[] = [
       {
         id: 'first_calculation',
@@ -171,126 +171,126 @@ export function GamificationBadges() {
 
   const getRarityBorder = (rarity: Badge['rarity']) => {
     switch (rarity) {
-      case 'common': return 'border-gray-300'
-      case 'rare': return 'border-blue-300'
-      case 'epic': return 'border-purple-300'
-      case 'legendary': return 'border-yellow-300'
-      default: return 'border-gray-300'
+      case 'common': return 'border-white/10'
+      case 'rare': return 'border-blue-500/20'
+      case 'epic': return 'border-purple-500/20'
+      case 'legendary': return 'border-yellow-500/20'
+      default: return 'border-white/10'
     }
   }
 
   const earnedBadges = badges.filter(badge => badge.earned)
   const unearnedBadges = badges.filter(badge => !badge.earned)
 
-  return (
-    <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-      <div className="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
-        <div className="flex items-center space-x-3">
-          <Award className="w-6 h-6 text-white" />
-          <div>
-            <h3 className="text-xl font-bold text-white">Pencapaian</h3>
-            <p className="text-purple-100">
-              {earnedBadges.length} dari {badges.length} badge telah diraih
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="p-6">
-        {/* Progress Overview */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-gray-700">Progress Badge</span>
-            <span className="text-sm text-gray-600">
-              {earnedBadges.length}/{badges.length}
-            </span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500"
-              style={{ width: `${(earnedBadges.length / badges.length) * 100}%` }}
-            ></div>
-          </div>
-        </div>
-
-        {/* Earned Badges */}
-        {earnedBadges.length > 0 && (
-          <div className="mb-8">
-            <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <Trophy className="w-5 h-5 text-yellow-500 mr-2" />
-              Badge yang Diraih
-            </h4>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {earnedBadges.map((badge) => (
-                <div
-                  key={badge.id}
-                  className={`relative p-4 rounded-xl border-2 ${getRarityBorder(badge.rarity)} bg-gradient-to-br ${getRarityColor(badge.rarity)} text-white transition-transform hover:scale-105`}
-                >
-                  <div className="text-center">
-                    <badge.icon className="w-8 h-8 mx-auto mb-2" />
-                    <h5 className="font-bold text-sm mb-1">{badge.name}</h5>
-                    <p className="text-xs opacity-90">{badge.description}</p>
-                    {badge.earnedDate && (
-                      <p className="text-xs mt-2 opacity-75">
-                        Diraih: {badge.earnedDate}
-                      </p>
-                    )}
-                  </div>
-                  <div className="absolute top-2 right-2">
-                    <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
-                      <Star className="w-4 h-4" />
-                    </div>
-                  </div>
-                </div>
-              ))}
+    return (
+      <div className="bg-slate-900/40 border border-white/5 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden">
+        <div className="bg-gradient-to-r from-purple-950/60 to-pink-955/40 px-6 py-4 border-b border-white/5">
+          <div className="flex items-center space-x-3">
+            <Award className="w-6 h-6 text-pink-400" />
+            <div>
+              <h3 className="text-xl font-bold text-white">Pencapaian</h3>
+              <p className="text-slate-400 text-sm">
+                {earnedBadges.length} dari {badges.length} badge telah diraih
+              </p>
             </div>
           </div>
-        )}
+        </div>
 
-        {/* Unearned Badges */}
-        {unearnedBadges.length > 0 && (
-          <div>
-            <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <Target className="w-5 h-5 text-gray-500 mr-2" />
-              Badge Berikutnya
-            </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {unearnedBadges.slice(0, 4).map((badge) => (
-                <div
-                  key={badge.id}
-                  className="p-4 border border-gray-200 rounded-xl bg-gray-50 opacity-75"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-gray-200 rounded-lg">
-                      <badge.icon className="w-6 h-6 text-gray-500" />
+        <div className="p-6">
+          {/* Progress Overview */}
+          <div className="mb-6">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-semibold text-slate-300">Progress Badge</span>
+              <span className="text-sm text-slate-400 font-bold">
+                {earnedBadges.length}/{badges.length}
+              </span>
+            </div>
+            <div className="w-full bg-slate-800 rounded-full h-2">
+              <div
+                className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500"
+                style={{ width: `${(earnedBadges.length / badges.length) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+
+          {/* Earned Badges */}
+          {earnedBadges.length > 0 && (
+            <div className="mb-8">
+              <h4 className="text-lg font-bold text-white mb-4 flex items-center">
+                <Trophy className="w-5 h-5 text-yellow-500 mr-2 animate-bounce" />
+                Badge yang Diraih
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {earnedBadges.map((badge) => (
+                  <div
+                    key={badge.id}
+                    className={`relative p-4 rounded-xl border-2 ${getRarityBorder(badge.rarity)} bg-gradient-to-br ${getRarityColor(badge.rarity)} text-white transition-transform hover:scale-105`}
+                  >
+                    <div className="text-center">
+                      <badge.icon className="w-8 h-8 mx-auto mb-2" />
+                      <h5 className="font-bold text-sm mb-1">{badge.name}</h5>
+                      <p className="text-xs opacity-90">{badge.description}</p>
+                      {badge.earnedDate && (
+                        <p className="text-xs mt-2 opacity-75">
+                          Diraih: {badge.earnedDate}
+                        </p>
+                      )}
                     </div>
-                    <div className="flex-1">
-                      <h5 className="font-semibold text-gray-700">{badge.name}</h5>
-                      <p className="text-sm text-gray-600 mb-2">{badge.description}</p>
-                      
-                      {/* Progress Bar */}
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className={`bg-gradient-to-r ${getRarityColor(badge.rarity)} h-2 rounded-full transition-all duration-500`}
-                          style={{ 
-                            width: `${Math.min((badge.currentProgress / badge.requirement) * 100, 100)}%` 
-                          }}
-                        ></div>
+                    <div className="absolute top-2 right-2">
+                      <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
+                        <Star className="w-4 h-4 animate-spin-slow" />
                       </div>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {badge.currentProgress.toFixed(0)}/{badge.requirement} 
-                        {badge.category === 'emission' && ' kg CO₂'}
-                        {badge.category === 'action' && ' aksi'}
-                        {badge.category === 'streak' && ' kali'}
-                      </p>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+
+          {/* Unearned Badges */}
+          {unearnedBadges.length > 0 && (
+            <div>
+              <h4 className="text-lg font-bold text-white mb-4 flex items-center">
+                <Target className="w-5 h-5 text-slate-500 mr-2" />
+                Badge Berikutnya
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {unearnedBadges.slice(0, 4).map((badge) => (
+                  <div
+                    key={badge.id}
+                    className="p-4 border border-white/5 rounded-xl bg-slate-950/40 opacity-75"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 bg-white/5 border border-white/10 rounded-lg">
+                        <badge.icon className="w-6 h-6 text-slate-400" />
+                      </div>
+                      <div className="flex-1">
+                        <h5 className="font-bold text-white">{badge.name}</h5>
+                        <p className="text-xs text-slate-400 mb-2 leading-relaxed">{badge.description}</p>
+
+                        {/* Progress Bar */}
+                        <div className="w-full bg-slate-800 rounded-full h-2">
+                          <div
+                            className={`bg-gradient-to-r ${getRarityColor(badge.rarity)} h-2 rounded-full transition-all duration-500`}
+                            style={{
+                              width: `${Math.min((badge.currentProgress / badge.requirement) * 100, 100)}%`
+                            }}
+                          ></div>
+                        </div>
+                        <p className="text-[10px] text-slate-500 mt-1 font-semibold">
+                          {badge.currentProgress.toFixed(0)}/{badge.requirement}
+                          {badge.category === 'emission' && ' kg CO₂'}
+                          {badge.category === 'action' && ' aksi'}
+                          {badge.category === 'streak' && ' kali'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  )
-}
+    )
+  }

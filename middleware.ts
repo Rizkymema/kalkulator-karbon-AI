@@ -10,24 +10,13 @@ export async function middleware(req: NextRequest) {
 
   console.log('Middleware:', { pathname, isAuthenticated, role: token?.role });
 
-  // Rute yang membutuhkan autentikasi
-  const authRoutes = ["/profil", "/riwayat", "/tebus", "/komunitas"];
-  const requiresAuth = authRoutes.some((route) => pathname.startsWith(route));
-
-  // Rute admin
+  // Hanya rute admin yang membutuhkan autentikasi
   const adminRoutes = ["/admin"];
   const requiresAdmin = adminRoutes.some((route) => pathname.startsWith(route));
 
-  // Redirect ke login jika belum login
-  if (requiresAuth && !isAuthenticated) {
-    const url = new URL("/login", req.url);
-    url.searchParams.set("callbackUrl", pathname);
-    return NextResponse.redirect(url);
-  }
-
   // Redirect ke beranda jika mencoba akses admin tanpa hak
   if (requiresAdmin && !isAdmin) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.redirect(new URL("/", req.url));
   }
 
   // Jika sudah login dan mencoba akses login/register, redirect berdasarkan role
@@ -44,10 +33,6 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/profil/:path*", 
-    "/riwayat/:path*", 
-    "/tebus/:path*", 
-    "/komunitas/:path*",
     "/admin/:path*",
     "/login",
     "/register"

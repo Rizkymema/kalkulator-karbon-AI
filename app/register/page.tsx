@@ -328,13 +328,13 @@ export default function RegisterPage() {
                 />
                 <label htmlFor="terms" className="ml-2 text-sm text-gray-600">
                   Saya setuju dengan{' '}
-                  <a href="#" className="text-green-600 hover:text-green-500 font-medium">
+                  <Link href="/syarat-ketentuan" className="text-green-600 hover:text-green-500 font-medium">
                     Syarat & Ketentuan
-                  </a>{' '}
+                  </Link>{' '}
                   dan{' '}
-                  <a href="#" className="text-green-600 hover:text-green-500 font-medium">
+                  <Link href="/kebijakan-privasi" className="text-green-600 hover:text-green-500 font-medium">
                     Kebijakan Privasi
-                  </a>
+                  </Link>
                 </label>
               </div>
 

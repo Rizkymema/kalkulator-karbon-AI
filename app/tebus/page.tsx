@@ -21,18 +21,34 @@ export default function TebusPage() {
   const [treeCount, setTreeCount] = useState<number>(1)
   const { tebusSummary, setTebusSummary, addRiwayatAktivitas } = useStore()
   const router = useRouter()
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    if (!tebusSummary) {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (mounted && !tebusSummary) {
       router.push('/kalkulator')
     }
-  }, [tebusSummary, router])
+  }, [tebusSummary, router, mounted])
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-[#030a08] text-slate-200 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#3AA17E] inline-block mb-4"></div>
+          <p className="text-slate-400">Memuat halaman...</p>
+        </div>
+      </div>
+    )
+  }
 
   if (!tebusSummary) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#030a08] text-slate-200 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">Silakan hitung emisi Anda terlebih dahulu</p>
+          <p className="text-slate-400 mb-4">Silakan hitung emisi Anda terlebih dahulu</p>
           <button
             onClick={() => router.push('/kalkulator')}
             className="bg-[#3AA17E] text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors"
@@ -109,25 +125,25 @@ export default function TebusPage() {
   const tantanganOptions = [
     'Tidak menggunakan plastik sekali pakai selama 1 minggu',
     'Menggunakan transportasi umum/bersepeda selama 1 minggu',
-    'Mengurangi konsumsi daging 50% selama 1 bulan',
+    'Mengurangi konsumsi daging 50% selama 1 minggu',
     'Mengajak 5 teman untuk menghitung jejak karbon mereka',
     'Membuat kompos dari sampah organik selama 1 bulan',
   ]
 
   if (showSuccess) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-xl shadow-lg p-8 max-w-md text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Check className="w-8 h-8 text-green-600" />
+      <div className="min-h-screen bg-[#030a08] text-slate-200 flex items-center justify-center">
+        <div className="bg-slate-900/80 border border-white/10 backdrop-blur-xl rounded-2xl shadow-xl p-8 max-w-md text-center">
+          <div className="w-16 h-16 bg-green-950/40 border border-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Check className="w-8 h-8 text-green-400" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-bold text-white mb-2">
             Terima Kasih! 🌱
           </h2>
-          <p className="text-gray-600 mb-4">
+          <p className="text-slate-300 mb-4">
             Anda telah berhasil mendukung program Karwanua sebesar {formatEmission(tebusSummary.totalEmisi)}
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-slate-500">
             Otomatis dialihkan ke halaman riwayat...
           </p>
         </div>
@@ -136,34 +152,37 @@ export default function TebusPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#030a08] text-slate-200 pt-36 pb-12 relative overflow-hidden">
+      {/* Background glow */}
+      <div className="absolute top-0 left-0 right-0 h-[500px] bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.05),transparent_50%)] pointer-events-none" />
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl font-black font-display uppercase tracking-tight text-white mb-4">
             Kurangi Jejak Karbon Anda
           </h1>
-          <p className="text-gray-600">
+          <p className="text-slate-400 font-medium">
             Pilih cara untuk menebus emisi karbon yang telah Anda hasilkan
           </p>
         </div>
 
         {/* Emission Summary */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <div className="bg-slate-900/40 border border-white/5 backdrop-blur-md rounded-2xl p-6 mb-8">
+          <h2 className="text-xl font-bold text-white mb-4">
             Hasil Kalkulasi Emisi
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="text-center p-4 bg-red-50 rounded-lg">
-              <h3 className="text-2xl font-bold text-red-600 mb-2">
+            <div className="text-center p-4 bg-red-950/20 border border-red-500/10 rounded-xl">
+              <h3 className="text-2xl font-black text-red-400 mb-2">
                 {formatEmission(tebusSummary.totalEmisi)}
               </h3>
-              <p className="text-gray-600">Total Emisi Karbon</p>
+              <p className="text-slate-450 text-sm font-medium">Total Emisi Karbon</p>
             </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <h3 className="text-2xl font-bold text-green-600 mb-2">
+            <div className="text-center p-4 bg-green-950/20 border border-green-500/10 rounded-xl">
+              <h3 className="text-2xl font-black text-green-400 mb-2">
                 {tebusSummary.pohonDibutuhkan} Pohon
               </h3>
-              <p className="text-gray-600">Dibutuhkan untuk Menebus</p>
+              <p className="text-slate-455 text-sm font-medium">Dibutuhkan untuk Menebus</p>
             </div>
           </div>
         </div>
@@ -180,36 +199,36 @@ export default function TebusPage() {
 
         {/* Action Options */}
         <div className="space-y-6">
-          <h2 className="text-xl font-semibold text-gray-900 text-center">
+          <h2 className="text-xl font-bold text-white text-center mb-4">
             Pilih Aksi Karwanua
           </h2>
 
           {/* Tanam Pohon */}
           <div
-            className={`bg-white rounded-xl shadow-sm p-6 cursor-pointer transition-all ${
+            className={`bg-slate-900/40 border border-white/5 backdrop-blur-md rounded-2xl p-6 cursor-pointer transition-all ${
               selectedAction === 'tanam' 
-                ? 'ring-2 ring-[#3AA17E] border-[#3AA17E]' 
-                : 'hover:shadow-md'
+                ? 'ring-2 ring-emerald-500 border-transparent' 
+                : 'hover:border-white/10'
             }`}
             onClick={() => setSelectedAction('tanam')}
           >
             <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <TreePine className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-green-950/40 border border-green-500/20 rounded-xl flex items-center justify-center">
+                <TreePine className="w-6 h-6 text-green-400" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg font-bold text-white mb-2">
                   Tanam Pohon Sendiri
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-slate-400 text-sm leading-relaxed mb-4">
                   Tanam {tebusSummary.pohonDibutuhkan} pohon di sekitar rumah atau berpartisipasi dalam program penanaman pohon
                 </p>
                 
                 {selectedAction === 'tanam' && (
-                  <div className="space-y-4 mt-4 pt-4 border-t" onClick={(e) => e.stopPropagation()}>
+                  <div className="space-y-4 mt-4 pt-4 border-t border-white/10" onClick={(e) => e.stopPropagation()}>
                     {/* Jumlah Pohon */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-slate-300 mb-2">
                         Jumlah Pohon yang Ditanam
                       </label>
                       <div className="flex items-center space-x-3">
@@ -219,9 +238,9 @@ export default function TebusPage() {
                           max={tebusSummary.pohonDibutuhkan}
                           value={treeCount}
                           onChange={(e) => setTreeCount(Math.max(1, parseInt(e.target.value) || 1))}
-                          className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3AA17E] focus:border-transparent"
+                          className="w-24 px-3 py-2 border border-white/10 bg-slate-950/60 text-white rounded-xl focus:ring-2 focus:ring-[#3AA17E] focus:border-transparent outline-none"
                         />
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-slate-500">
                           dari {tebusSummary.pohonDibutuhkan} pohon yang direkomendasikan
                         </span>
                       </div>
@@ -229,8 +248,8 @@ export default function TebusPage() {
 
                     {/* Tanggal Penanaman */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        <Calendar className="w-4 h-4 inline mr-1" />
+                      <label className="block text-sm font-semibold text-slate-300 mb-2">
+                        <Calendar className="w-4 h-4 inline mr-1 text-emerald-400" />
                         Tanggal Penanaman
                       </label>
                       <input
@@ -238,13 +257,13 @@ export default function TebusPage() {
                         value={plantingDate}
                         onChange={(e) => setPlantingDate(e.target.value)}
                         max={new Date().toISOString().split('T')[0]}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3AA17E] focus:border-transparent"
+                        className="w-full px-3 py-2 border border-white/10 bg-slate-950/60 text-white rounded-xl focus:ring-2 focus:ring-[#3AA17E] focus:border-transparent outline-none"
                       />
                     </div>
 
                     {/* Upload Foto */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-slate-300 mb-2">
                         Upload Foto Bukti Penanaman
                       </label>
                       <ImageUploader
@@ -255,8 +274,8 @@ export default function TebusPage() {
 
                     {/* Lokasi Penanaman */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        <MapPin className="w-4 h-4 inline mr-1" />
+                      <label className="block text-sm font-semibold text-slate-300 mb-2">
+                        <MapPin className="w-4 h-4 inline mr-1 text-emerald-400" />
                         Lokasi Penanaman
                       </label>
                       <LocationPicker
@@ -267,11 +286,11 @@ export default function TebusPage() {
 
                     {/* Validation Message */}
                     {selectedAction === 'tanam' && (!uploadedImage || !selectedLocation) && (
-                      <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                        <p className="text-sm text-yellow-700">
+                      <div className="p-3 bg-yellow-950/20 border border-yellow-500/10 text-yellow-300 rounded-xl">
+                        <p className="text-sm">
                           ⚠️ Untuk konfirmasi, mohon lengkapi:
-                          {!uploadedImage && <span className="block">• Upload foto bukti penanaman</span>}
-                          {!selectedLocation && <span className="block">• Pilih lokasi penanaman</span>}
+                          {!uploadedImage && <span className="block ml-2">• Upload foto bukti penanaman</span>}
+                          {!selectedLocation && <span className="block ml-2">• Pilih lokasi penanaman</span>}
                         </p>
                       </div>
                     )}
@@ -283,58 +302,58 @@ export default function TebusPage() {
 
           {/* Donasi */}
           <div
-            className={`bg-white rounded-xl shadow-sm p-6 cursor-pointer transition-all ${
+            className={`bg-slate-900/40 border border-white/5 backdrop-blur-md rounded-2xl p-6 cursor-pointer transition-all ${
               selectedAction === 'donasi' 
-                ? 'ring-2 ring-[#3AA17E] border-[#3AA17E]' 
-                : 'hover:shadow-md'
+                ? 'ring-2 ring-emerald-500 border-transparent' 
+                : 'hover:border-white/10'
             }`}
             onClick={() => setSelectedAction('donasi')}
           >
             <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Heart className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-blue-950/40 border border-blue-500/20 rounded-xl flex items-center justify-center">
+                <Heart className="w-6 h-6 text-blue-405" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg font-bold text-white mb-2">
                   Donasi untuk Penanaman
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-slate-400 text-sm leading-relaxed mb-4">
                   Berdonasi kepada organisasi lingkungan untuk menanam {tebusSummary.pohonDibutuhkan} pohon atas nama Anda
                 </p>
                 
                 {selectedAction === 'donasi' && (
-                  <div className="space-y-4 mt-4 pt-4 border-t">
+                  <div className="space-y-4 mt-4 pt-4 border-t border-white/10">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <a
                         href="https://lindungihutan.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                        className="flex items-center space-x-3 p-3 border border-white/5 bg-slate-950/40 rounded-xl hover:bg-slate-900/40 transition-colors"
                       >
-                        <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                          <TreePine className="w-4 h-4 text-green-600" />
+                        <div className="w-8 h-8 bg-green-950/40 border border-green-500/20 rounded-lg flex items-center justify-center">
+                          <TreePine className="w-4 h-4 text-green-400" />
                         </div>
                         <div className="flex-1">
-                          <p className="font-medium text-gray-900">LindungiHutan</p>
-                          <p className="text-sm text-gray-500">Platform donasi lingkungan</p>
+                          <p className="font-semibold text-white text-sm">LindungiHutan</p>
+                          <p className="text-xs text-slate-400">Platform donasi lingkungan</p>
                         </div>
-                        <ExternalLink className="w-4 h-4 text-gray-400" />
+                        <ExternalLink className="w-4 h-4 text-slate-500" />
                       </a>
                       
                       <a
                         href="https://kitabisa.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                        className="flex items-center space-x-3 p-3 border border-white/5 bg-slate-950/40 rounded-xl hover:bg-slate-900/40 transition-colors"
                       >
-                        <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
-                          <Heart className="w-4 h-4 text-orange-600" />
+                        <div className="w-8 h-8 bg-orange-955/30 border border-orange-500/20 rounded-lg flex items-center justify-center">
+                          <Heart className="w-4 h-4 text-orange-400" />
                         </div>
                         <div className="flex-1">
-                          <p className="font-medium text-gray-900">Kitabisa</p>
-                          <p className="text-sm text-gray-500">Platform donasi sosial</p>
+                          <p className="font-semibold text-white text-sm">Kitabisa</p>
+                          <p className="text-xs text-slate-400">Platform donasi sosial</p>
                         </div>
-                        <ExternalLink className="w-4 h-4 text-gray-400" />
+                        <ExternalLink className="w-4 h-4 text-slate-500" />
                       </a>
                     </div>
                   </div>
@@ -345,32 +364,32 @@ export default function TebusPage() {
 
           {/* Tantangan */}
           <div
-            className={`bg-white rounded-xl shadow-sm p-6 cursor-pointer transition-all ${
+            className={`bg-slate-900/40 border border-white/5 backdrop-blur-md rounded-2xl p-6 cursor-pointer transition-all ${
               selectedAction === 'tantangan' 
-                ? 'ring-2 ring-[#3AA17E] border-[#3AA17E]' 
-                : 'hover:shadow-md'
+                ? 'ring-2 ring-emerald-500 border-transparent' 
+                : 'hover:border-white/10'
             }`}
             onClick={() => setSelectedAction('tantangan')}
           >
             <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Target className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-purple-950/40 border border-purple-500/20 rounded-xl flex items-center justify-center">
+                <Target className="w-6 h-6 text-purple-400" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg font-bold text-white mb-2">
                   Ikuti Tantangan Hijau
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-slate-400 text-sm leading-relaxed mb-4">
                   Komitmen untuk mengurangi emisi karbon di masa depan melalui perubahan gaya hidup
                 </p>
                 
                 {selectedAction === 'tantangan' && (
-                  <div className="space-y-3 mt-4 pt-4 border-t" onClick={(e) => e.stopPropagation()}>
-                    <p className="text-sm font-medium text-gray-700">
+                  <div className="space-y-3 mt-4 pt-4 border-t border-white/10" onClick={(e) => e.stopPropagation()}>
+                    <p className="text-sm font-semibold text-slate-300 mb-2">
                       Pilih tantangan yang ingin Anda ikuti (minimal 1):
                     </p>
                     {tantanganOptions.map((tantangan, index) => (
-                      <label key={index} className="flex items-start space-x-3 cursor-pointer p-2 rounded-lg hover:bg-gray-50">
+                      <label key={index} className="flex items-start space-x-3 cursor-pointer p-2 rounded-xl hover:bg-white/5 transition-colors">
                         <input
                           type="checkbox"
                           checked={selectedChallenges.includes(tantangan)}
@@ -381,23 +400,23 @@ export default function TebusPage() {
                               setSelectedChallenges(selectedChallenges.filter(c => c !== tantangan))
                             }
                           }}
-                          className="mt-1 rounded border-gray-300 text-[#3AA17E] focus:ring-[#3AA17E]"
+                          className="mt-1 rounded border-white/10 bg-slate-950/60 text-[#3AA17E] focus:ring-[#3AA17E] cursor-pointer"
                         />
-                        <span className="text-gray-700 text-sm">{tantangan}</span>
+                        <span className="text-slate-300 text-sm">{tantangan}</span>
                       </label>
                     ))}
                     
                     {selectedChallenges.length > 0 && (
-                      <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                        <p className="text-sm text-green-700">
+                      <div className="p-3 bg-green-950/20 border border-green-500/10 text-green-300 rounded-xl">
+                        <p className="text-sm">
                           ✅ Anda memilih {selectedChallenges.length} tantangan. Terima kasih atas komitmen Anda!
                         </p>
                       </div>
                     )}
                     
                     {selectedAction === 'tantangan' && selectedChallenges.length === 0 && (
-                      <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                        <p className="text-sm text-yellow-700">
+                      <div className="p-3 bg-yellow-950/20 border border-yellow-500/10 text-yellow-300 rounded-xl">
+                        <p className="text-sm">
                           ⚠️ Pilih minimal 1 tantangan untuk melanjutkan
                         </p>
                       </div>
@@ -415,7 +434,7 @@ export default function TebusPage() {
             <button
               onClick={handleSubmit}
               disabled={isSubmitting || !isFormValid()}
-              className="bg-[#3AA17E] text-white px-8 py-4 rounded-lg font-semibold hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-900/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {isSubmitting ? (
                 <>
@@ -444,9 +463,9 @@ export default function TebusPage() {
                     alert('Link berhasil disalin!')
                   }
                 }}
-                className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50"
+                className="flex items-center space-x-2 px-4 py-2 border border-white/10 bg-white/5 rounded-xl text-slate-300 hover:bg-white/10 cursor-pointer transition-colors"
               >
-                <Share2 className="w-4 h-4" />
+                <Share2 className="w-4 h-4 text-emerald-400" />
                 <span>Bagikan</span>
               </button>
             </div>

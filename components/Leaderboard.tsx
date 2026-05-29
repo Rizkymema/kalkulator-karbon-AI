@@ -3,9 +3,11 @@
 import Card from './Card'
 import { useStore } from '@/lib/store'
 import { Trophy, Medal, Award } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 export function Leaderboard() {
   const { leaderboard } = useStore()
+  const router = useRouter()
 
   const getBadgeIcon = (badge: 'gold' | 'silver' | 'bronze') => {
     switch (badge) {
@@ -30,11 +32,11 @@ export function Leaderboard() {
   }
 
   return (
-    <Card className="bg-white">
+    <Card className="border border-white/5 bg-slate-900/40 backdrop-blur-md shadow-lg">
       <div className="p-6">
         <div className="flex items-center gap-3 mb-6">
-          <Trophy className="w-8 h-8 text-yellow-500" />
-          <h2 className="text-2xl font-bold text-gray-800">
+          <Trophy className="w-8 h-8 text-yellow-500 animate-pulse" />
+          <h2 className="text-2xl font-bold text-white uppercase tracking-tight font-display">
             Peringkat Teratas
           </h2>
         </div>
@@ -43,11 +45,11 @@ export function Leaderboard() {
           {leaderboard.map((user, index) => (
             <div 
               key={user.id}
-              className={`p-4 rounded-xl border-2 transition-all duration-300 hover:shadow-lg ${
-                index === 0 ? 'border-yellow-300 bg-yellow-50' :
-                index === 1 ? 'border-gray-300 bg-gray-50' :
-                index === 2 ? 'border-orange-300 bg-orange-50' :
-                'border-gray-200 bg-white'
+              className={`p-4 rounded-xl border transition-all duration-300 ${
+                index === 0 ? 'border-yellow-500/50 bg-yellow-950/20 shadow-[0_0_15px_rgba(234,179,8,0.08)]' :
+                index === 1 ? 'border-slate-500/40 bg-slate-800/20' :
+                index === 2 ? 'border-orange-500/40 bg-orange-950/20' :
+                'border-white/5 bg-slate-950/40 hover:border-white/10'
               }`}
             >
               <div className="flex items-center justify-between">
@@ -62,10 +64,10 @@ export function Leaderboard() {
 
                   {/* User Info */}
                   <div>
-                    <h3 className="font-semibold text-gray-800 text-lg">
+                    <h3 className={`font-semibold text-lg ${index === 0 ? 'text-yellow-400' : 'text-white'}`}>
                       {user.nama}
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-slate-400">
                       {user.totalEmisi} kg CO₂ • {user.pohonDitanam} pohon ditanam
                     </p>
                   </div>
@@ -73,10 +75,10 @@ export function Leaderboard() {
 
                 {/* Achievement Badge */}
                 <div className="text-right">
-                  <div className="text-sm font-medium text-gray-700">
+                  <div className="text-sm font-semibold text-slate-300">
                     Emisi Terendah
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-slate-500">
                     Bulan ini
                   </div>
                 </div>
@@ -86,10 +88,13 @@ export function Leaderboard() {
         </div>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600 mb-3">
+          <p className="text-sm text-slate-400 mb-3">
             Ingin masuk peringkat? Kurangi emisi karbon Anda!
           </p>
-          <button className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium">
+          <button 
+            onClick={() => router.push('/kalkulator')}
+            className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition-colors cursor-pointer"
+          >
             Hitung Emisi Saya
           </button>
         </div>
